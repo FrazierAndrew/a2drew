@@ -1,1 +1,31 @@
-node_modules
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Large health data files (we only need the processed JSON)
+health_data/apple_health_export/export.xml
+health_data/apple_health_export/export_cda.xml
+health_data/export.zip
+health_data/apple_health_export/workout-routes/
+
+# Keep the processed JSON
+!public/health_data_processed.json
