@@ -24,10 +24,11 @@ function Home() {
 
     const rand = (min, max) => Math.random() * (max - min) + min;
 
-    // Create turtles
+    // Create turtles (keep them below navbar area)
+    const topBoundary = 40; // Same as in animation loop
     const initial = Array.from({ length: NUM_TURTLES }).map(() => ({
       x: rand(0, Math.max(1, bounds.width - SIZE)),
-      y: rand(0, Math.max(1, bounds.height - SIZE)),
+      y: rand(topBoundary, Math.max(topBoundary + 1, bounds.height - SIZE)),
       vx: rand(-1.5, 1.5) || 0.8,
       vy: rand(-1.5, 1.5) || -0.8,
       r: rand(0, 360),
@@ -45,10 +46,11 @@ function Home() {
         x += vx * speed;
         y += vy * speed;
 
-        // bounce on walls
+        // bounce on walls (keep turtles out of navbar area)
+        const topBoundary = 40; // Keep turtles below navbar gradient on mobile
         if (x <= 0) { x = 0; vx = Math.abs(vx); }
         if (x >= bounds.width - SIZE) { x = bounds.width - SIZE; vx = -Math.abs(vx); }
-        if (y <= 0) { y = 0; vy = Math.abs(vy); }
+        if (y <= topBoundary) { y = topBoundary; vy = Math.abs(vy); }
         if (y >= bounds.height - SIZE) { y = bounds.height - SIZE; vy = -Math.abs(vy); }
 
         // slight rotation for fun
