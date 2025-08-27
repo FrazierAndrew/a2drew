@@ -7,11 +7,7 @@ const DashboardContainer = styled.div`
   margin: 0 auto;
 `;
 
-const Title = styled.h1`
-  color: rgb(47, 43, 36);
-  text-align: center;
-  margin-bottom: 2rem;
-`;
+
 
 const StatsGrid = styled.div`
   display: grid;
