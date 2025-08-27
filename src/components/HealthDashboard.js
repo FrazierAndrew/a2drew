@@ -2,27 +2,40 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const DashboardContainer = styled.div`
-  padding: 20px;
+  padding: 10px;
   max-width: 1200px;
   margin: 0 auto;
+  
+  @media (min-width: 768px) {
+    padding: 20px;
+  }
 `;
 
 
 
 const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 15px;
   margin-bottom: 2rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
 `;
 
 const StatCard = styled.div`
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-left: 4px solid ${props => props.color || '#4A90E2'};
   transition: transform 0.2s ease;
+
+  @media (min-width: 768px) {
+    padding: 24px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -30,10 +43,14 @@ const StatCard = styled.div`
 `;
 
 const StatValue = styled.div`
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: rgb(47, 43, 36);
   margin-bottom: 0.5rem;
+  
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const StatLabel = styled.div`

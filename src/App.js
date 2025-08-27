@@ -10,15 +10,25 @@ import Resume from './components/Resume';
 
 const PageContainer = styled.div`
   min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
   background: ${props => props.$isHome ? 
     'linear-gradient(135deg, #e9ecef 0%, rgba(175, 211, 243, 0.9) 100%)' : 
     '#e9ecef'};
   font-family: Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
 `;
 
 const ContentContainer = styled.div`
-  padding-top: 100px; // Space for taller navbar
-  min-height: calc(100vh - 100px); // Adjust for navbar height
+  padding-top: 80px; // Reduced since navbar blends down
+  min-height: calc(100vh - 80px);
+  
+  @media (min-width: 768px) {
+    padding-top: 100px; // Space for desktop navbar
+    min-height: calc(100vh - 100px);
+  }
 `;
 
 function App() {

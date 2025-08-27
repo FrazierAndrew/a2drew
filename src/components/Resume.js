@@ -5,9 +5,14 @@ const ResumeContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px);
-  padding: 20px;
+  min-height: calc(100vh - 120px);
+  padding: 10px;
   background-color: #f5f5f5;
+  
+  @media (min-width: 768px) {
+    min-height: calc(100vh - 100px);
+    padding: 20px;
+  }
 `;
 
 const PDFViewer = styled.iframe`
