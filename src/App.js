@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-
 import StravaGrid from './components/StravaGrid';
 import StravaCallback from './components/StravaCallback';
 import Resume from './components/Resume';
+import Staging from './components/Staging';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -95,6 +95,13 @@ function AppContent() {
           <PageContainer $isHome={false}>
             <ContentContainer $isHome={false}>
               <Resume />
+            </ContentContainer>
+          </PageContainer>
+        } />
+        <Route path="/staging" element={
+          <PageContainer $isHome={false}>
+            <ContentContainer $isHome={false}>
+              <Staging />
             </ContentContainer>
           </PageContainer>
         } />
