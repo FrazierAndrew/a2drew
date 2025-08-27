@@ -71,7 +71,7 @@ function Navbar() {
           Health Metrics
         </NavLink>
         <NavLink to="/c" className={location.pathname === '/c' ? 'active' : ''}>
-          c
+          Resume
         </NavLink>
       </NavLinks>
     </Nav>
