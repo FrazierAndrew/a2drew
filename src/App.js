@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
+import HealthDashboard from './components/HealthDashboard';
 import StravaGrid from './components/StravaGrid';
 import StravaCallback from './components/StravaCallback';
 
@@ -26,7 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/a" element={<StravaGrid />} />
-            <Route path="/b" element={<div>Page B</div>} />
+            <Route path="/b" element={<HealthDashboard />} />
             <Route path="/c" element={<div>Page C</div>} />
             <Route path="/callback" element={<StravaCallback />} />
             {/* Catch all unknown routes and redirect to home */}

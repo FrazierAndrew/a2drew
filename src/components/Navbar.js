@@ -65,10 +65,10 @@ function Navbar() {
       <Brand to="/">Andrew</Brand>
       <NavLinks>
         <NavLink to="/a" className={location.pathname === '/a' ? 'active' : ''}>
-          strava
+          Strava Metrics
         </NavLink>
         <NavLink to="/b" className={location.pathname === '/b' ? 'active' : ''}>
-          b
+          Health Metrics
         </NavLink>
         <NavLink to="/c" className={location.pathname === '/c' ? 'active' : ''}>
           c
