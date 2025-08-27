@@ -3,100 +3,104 @@ import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 
 const Nav = styled.nav`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem 1rem 1.5rem 1rem;
-  background: linear-gradient(180deg, 
-    rgba(175, 211, 243, 0.92) 0%, 
-    rgba(170, 206, 238, 0.8) 50%,
-    rgba(165, 201, 233, 0.7) 70%,
-    rgba(160, 196, 228, 0.5) 85%,
-    rgba(155, 191, 223, 0.3) 95%,
-    rgba(150, 186, 218, 0.15) 100%);
-  backdrop-filter: blur(12px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 1000;
-  min-height: 120px;
+  min-width: 280px;
+  max-width: 90vw;
 
   @media (min-width: 768px) {
-    padding: 1.5rem 2rem 2.5rem 2rem;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    min-height: 100px;
+    min-width: 400px;
+    padding: 2.5rem;
+    max-width: none;
   }
 `;
 
 const Brand = styled(Link)`
-  font-size: 1.6rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
   text-decoration: none;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.25px;
   transition: all 0.3s ease;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
   
   @media (min-width: 768px) {
-    font-size: 1.8rem;
-    margin-bottom: 0;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
   }
   
   &:hover {
     color: #34495e;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const NavLinks = styled.div`
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
 
   @media (min-width: 768px) {
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-    justify-content: flex-end;
+    gap: 1.5rem;
   }
 `;
 
 const NavLink = styled(Link)`
-  color: #34495e;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: #2c3e50;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 0.75rem;
-  border-radius: 20px;
+  padding: 0.8rem 0.6rem;
+  border-radius: 12px;
   transition: all 0.3s ease;
-  position: relative;
-  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.15)'};
-  border: 1px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.25)'};
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(2px);
-  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.025em;
+  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)'};
+  border: 2px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.4)'};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @media (min-width: 768px) {
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1.25rem;
+    border-radius: 15px;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -105,15 +109,9 @@ function Navbar() {
 
   return (
     <Nav>
-      <Brand to="/">Andrew</Brand>
+      <Brand to="/">Andrew Frazier</Brand>
       <NavLinks>
-        <NavLink to="/a" className={location.pathname === '/a' ? 'active' : ''}>
-          Strava Metrics
-        </NavLink>
-        <NavLink to="/b" className={location.pathname === '/b' ? 'active' : ''}>
-          Health Metrics
-        </NavLink>
-        <NavLink to="/c" className={location.pathname === '/c' ? 'active' : ''}>
+        <NavLink to="/resume" className={location.pathname === '/resume' ? 'active' : ''}>
           Resume
         </NavLink>
         <NavLink 
@@ -123,6 +121,12 @@ function Navbar() {
           rel="noopener noreferrer"
         >
           LinkedIn
+        </NavLink>
+        <NavLink to="/strava" className={location.pathname === '/strava' ? 'active' : ''}>
+          Strava
+        </NavLink>
+        <NavLink to="/health" className={location.pathname === '/health' ? 'active' : ''}>
+          Health
         </NavLink>
       </NavLinks>
     </Nav>

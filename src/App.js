@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -22,55 +22,91 @@ const PageContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  padding-top: 140px; // Proper space for mobile navbar
-  min-height: calc(100vh - 140px);
+  min-height: 100vh;
+  position: relative;
+  padding-top: ${props => props.$isHome ? '0' : '60px'};
   
   @media (min-width: 768px) {
-    padding-top: 100px; // Space for desktop navbar
-    min-height: calc(100vh - 100px);
+    padding-top: ${props => props.$isHome ? '0' : '80px'};
   }
 `;
 
-function App() {
+const HomeButton = styled.button`
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  color: #2c3e50;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  
+  @media (min-width: 768px) {
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+function AppContent() {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   return (
-    <Router>
+    <>
+      {!isHome && (
+        <HomeButton onClick={() => window.location.href = '/'}>
+          ← Home
+        </HomeButton>
+      )}
       <Routes>
         <Route path="/" element={
           <PageContainer $isHome={true}>
             <Navbar />
-            <ContentContainer>
+            <ContentContainer $isHome={true}>
               <Home />
             </ContentContainer>
           </PageContainer>
         } />
-        <Route path="/a" element={
+        <Route path="/strava" element={
           <PageContainer $isHome={false}>
-            <Navbar />
-            <ContentContainer>
+            <ContentContainer $isHome={false}>
               <StravaGrid />
             </ContentContainer>
           </PageContainer>
         } />
-        <Route path="/b" element={
+        <Route path="/health" element={
           <PageContainer $isHome={false}>
-            <Navbar />
-            <ContentContainer>
+            <ContentContainer $isHome={false}>
               <HealthDashboard />
             </ContentContainer>
           </PageContainer>
         } />
-        <Route path="/c" element={
+        <Route path="/resume" element={
           <PageContainer $isHome={false}>
-            <Navbar />
-            <ContentContainer>
+            <ContentContainer $isHome={false}>
               <Resume />
             </ContentContainer>
           </PageContainer>
         } />
         <Route path="/callback" element={
           <PageContainer $isHome={false}>
-            <Navbar />
-            <ContentContainer>
+            <ContentContainer $isHome={false}>
               <StravaCallback />
             </ContentContainer>
           </PageContainer>
@@ -78,6 +114,14 @@ function App() {
         {/* Catch all unknown routes and redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
