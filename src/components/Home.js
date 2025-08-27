@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 function Home() {
   const containerRef = useRef(null);
   const [bounds, setBounds] = useState({ width: 0, height: 0 });
-  const [turtles, setTurtles] = useState([]);
+  const [characters, setCharacters] = useState([]);
 
   useEffect(() => {
     const updateBounds = () => {
@@ -20,25 +20,27 @@ function Home() {
     if (!bounds.width || !bounds.height) return;
 
     const SIZE = 36; // approximate emoji box
-    const NUM = 10;
+    const NUM_TURTLES = 14; // Reduced from 20 to 14 (removing 6)
 
     const rand = (min, max) => Math.random() * (max - min) + min;
 
-    const initial = Array.from({ length: NUM }).map(() => ({
+    // Create turtles
+    const initial = Array.from({ length: NUM_TURTLES }).map(() => ({
       x: rand(0, Math.max(1, bounds.width - SIZE)),
       y: rand(0, Math.max(1, bounds.height - SIZE)),
       vx: rand(-1.5, 1.5) || 0.8,
       vy: rand(-1.5, 1.5) || -0.8,
       r: rand(0, 360),
+      type: 'turtle'
     }));
-
-    let turtlesState = initial;
-    setTurtles(turtlesState);
+    let charactersState = initial;
+    setCharacters(charactersState);
 
     let rafId;
     const step = () => {
-      turtlesState = turtlesState.map(t => {
-        let { x, y, vx, vy, r } = t;
+      charactersState = charactersState.map(char => {
+        let { x, y, vx, vy, r, type } = char;
+        
         const speed = 1.2; // base speed multiplier
         x += vx * speed;
         y += vy * speed;
@@ -51,9 +53,10 @@ function Home() {
 
         // slight rotation for fun
         r = (r + 2) % 360;
-        return { x, y, vx, vy, r };
+        return { x, y, vx, vy, r, type };
       });
-      setTurtles(turtlesState);
+
+      setCharacters(charactersState);
       rafId = requestAnimationFrame(step);
     };
 
@@ -68,19 +71,19 @@ function Home() {
       style={{
         position: 'relative',
         width: '100%',
-        height: 'calc(100vh - 80px)',
+        height: 'calc(100vh - 100px)',
         overflow: 'hidden',
-        background: 'white',
+        background: 'transparent',
       }}
     >
-      {turtles.map((t, idx) => (
+      {characters.map((char, idx) => (
         <span
           key={idx}
           style={{
             position: 'absolute',
             left: 0,
             top: 0,
-            transform: `translate(${t.x}px, ${t.y}px) rotate(${t.r}deg)`,
+            transform: `translate(${char.x}px, ${char.y}px) rotate(${char.r}deg)`,
             fontSize: 28,
             lineHeight: 1,
             userSelect: 'none',

@@ -7,53 +7,61 @@ const Nav = styled.nav`
   top: 0;
   left: 0;
   right: 0;
-  padding: 1rem 2rem;
-  background-color: rgba(175, 211, 243, 0.9);
-  backdrop-filter: blur(5px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 2rem;
+  background: linear-gradient(90deg, rgba(175, 211, 243, 0.95) 0%, rgba(145, 180, 220, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 2rem;
   z-index: 1000;
 `;
 
 const Brand = styled(Link)`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: rgb(47, 43, 36);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
   text-decoration: none;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: #34495e;
+    transform: translateY(-1px);
+  }
 `;
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 1.5rem;
+  gap: 0.5rem;
 `;
 
 const NavLink = styled(Link)`
-  color: rgb(53, 57, 61);
+  color: #34495e;
   text-decoration: none;
-  font-size: 1.1rem;
-  transition: color 0.2s;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
   position: relative;
+  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.15)'};
+  border: 1px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.25)'};
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(2px);
 
   &:hover {
-    color: rgb(47, 43, 36);
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 2px;
-    background-color: rgb(47, 43, 36);
-    transform: scaleX(0);
-    transition: transform 0.2s;
-  }
-
-  &.active::after {
-    transform: scaleX(1);
+  &.active {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -72,6 +80,14 @@ function Navbar() {
         </NavLink>
         <NavLink to="/c" className={location.pathname === '/c' ? 'active' : ''}>
           Resume
+        </NavLink>
+        <NavLink 
+          as="a" 
+          href="https://www.linkedin.com/in/andrew-frazier-0219a716a/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          LinkedIn
         </NavLink>
       </NavLinks>
     </Nav>

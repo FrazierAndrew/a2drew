@@ -10,32 +10,64 @@ import Resume from './components/Resume';
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background-color: white;
+  background: ${props => props.$isHome ? 
+    'linear-gradient(135deg, #e9ecef 0%, rgba(175, 211, 243, 0.9) 100%)' : 
+    '#e9ecef'};
   font-family: Arial, sans-serif;
 `;
 
 const ContentContainer = styled.div`
-  padding-top: 80px; // Space for navbar
-  min-height: calc(100vh - 80px); // Adjust for navbar height
+  padding-top: 100px; // Space for taller navbar
+  min-height: calc(100vh - 100px); // Adjust for navbar height
 `;
 
 function App() {
   return (
     <Router>
-      <PageContainer>
-        <Navbar />
-        <ContentContainer>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/a" element={<StravaGrid />} />
-            <Route path="/b" element={<HealthDashboard />} />
-            <Route path="/c" element={<Resume />} />
-            <Route path="/callback" element={<StravaCallback />} />
-            {/* Catch all unknown routes and redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </ContentContainer>
-      </PageContainer>
+      <Routes>
+        <Route path="/" element={
+          <PageContainer $isHome={true}>
+            <Navbar />
+            <ContentContainer>
+              <Home />
+            </ContentContainer>
+          </PageContainer>
+        } />
+        <Route path="/a" element={
+          <PageContainer $isHome={false}>
+            <Navbar />
+            <ContentContainer>
+              <StravaGrid />
+            </ContentContainer>
+          </PageContainer>
+        } />
+        <Route path="/b" element={
+          <PageContainer $isHome={false}>
+            <Navbar />
+            <ContentContainer>
+              <HealthDashboard />
+            </ContentContainer>
+          </PageContainer>
+        } />
+        <Route path="/c" element={
+          <PageContainer $isHome={false}>
+            <Navbar />
+            <ContentContainer>
+              <Resume />
+            </ContentContainer>
+          </PageContainer>
+        } />
+        <Route path="/callback" element={
+          <PageContainer $isHome={false}>
+            <Navbar />
+            <ContentContainer>
+              <StravaCallback />
+            </ContentContainer>
+          </PageContainer>
+        } />
+        {/* Catch all unknown routes and redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </Router>
   );
 }

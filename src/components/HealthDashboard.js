@@ -172,7 +172,6 @@ function HealthDashboard() {
   if (error) {
     return (
       <DashboardContainer>
-        <Title>Health Dashboard</Title>
         <ErrorMessage>
           <h3>Health data not found</h3>
           <p>Please process your Apple Health data first.</p>
@@ -195,8 +194,6 @@ function HealthDashboard() {
 
   return (
     <DashboardContainer>
-      <Title>Health Dashboard</Title>
-      
       <StatsGrid>
         <StatCard color="#FF6B6B">
           <StatValue>{formatNumber(stats.avg_daily_steps_7d)}</StatValue>
