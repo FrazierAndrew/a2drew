@@ -109,10 +109,28 @@ const DateText = styled.span`
 function StravaGrid() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasStaticData, setHasStaticData] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    // First try static pre-fetched data
+    (async () => {
+      try {
+        const res = await fetch('/strava_activities.json', { cache: 'no-cache' });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setHasStaticData(true);
+            setActivities(data);
+            setLoading(false);
+            return; // done
+          }
+        }
+      } catch (e) {
+        // ignore and fall through to OAuth
+      }
+
+      // Fallback to OAuth flow (local only)
       const token = localStorage.getItem('strava_access_token');
       if (token) {
         setIsAuthenticated(true);
@@ -120,42 +138,13 @@ function StravaGrid() {
       } else {
         setLoading(false);
       }
-    };
-
-    checkAuth();
+    })();
   }, []);
 
   const fetchActivities = async () => {
     try {
       const data = await stravaService.getActivities();
-      console.log('Strava Activities Data:', data);
-      
-      // Ensure we have map data for each activity
-      const activitiesWithMaps = await Promise.all(
-        data.map(async (activity) => {
-          if (!activity.map) {
-            // If no map data, try to fetch it directly
-            try {
-              const detailResponse = await fetch(
-                `https://www.strava.com/api/v3/activities/${activity.id}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem('strava_access_token')}`,
-                  },
-                }
-              );
-              const detail = await detailResponse.json();
-              return { ...activity, map: detail.map };
-            } catch (error) {
-              console.error('Error fetching activity detail:', error);
-              return activity;
-            }
-          }
-          return activity;
-        })
-      );
-
-      setActivities(activitiesWithMaps);
+      setActivities(data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching Strava activities:', error);
@@ -188,68 +177,50 @@ function StravaGrid() {
   };
 
   const getMapUrl = (activity) => {
-    if (!activity.map?.summary_polyline) {
-      console.log('No polyline for activity:', activity.name);
-      return null;
-    }
-    // Try using Strava's own map tiles
-    return `https://www.strava.com/routes/preview/${activity.id}.png`;
+    if (!activity.map?.summary_polyline) return null;
+    // Keep placeholder/fallback strategy; static thumbnails often require auth, so show none if unavailable
+    return null;
   };
-
-  if (!isAuthenticated) {
-    const authUrl = `https://www.strava.com/oauth/authorize?client_id=174379&response_type=code&redirect_uri=${encodeURIComponent(window.location.origin + '/callback')}&scope=activity:read_all`;
-    
-    return (
-      <CenterContainer>
-        <ConnectButton href={authUrl}>
-          Connect with Strava
-        </ConnectButton>
-      </CenterContainer>
-    );
-  }
 
   if (loading) {
     return <LoadingMessage>Loading activities...</LoadingMessage>;
   }
 
+  if (!hasStaticData && !isAuthenticated) {
+    const authUrl = `https://www.strava.com/oauth/authorize?client_id=174379&response_type=code&redirect_uri=${encodeURIComponent(window.location.origin + '/callback')}&scope=activity:read_all`;
+    return (
+      <CenterContainer>
+        <div style={{ textAlign: 'center' }}>
+          <p>Static activities not found. To refresh locally, connect to Strava, then run the fetch script.</p>
+          <ConnectButton href={authUrl}>Connect with Strava (local refresh)</ConnectButton>
+        </div>
+      </CenterContainer>
+    );
+  }
+
   return (
     <GridContainer>
-      {activities.map((activity) => {
-        console.log('Processing activity:', {
-          id: activity.id,
-          name: activity.name,
-          hasMap: !!activity.map,
-          hasPolyline: !!activity.map?.summary_polyline
-        });
-        
-        return (
-          <ActivityLink 
-            href={`https://www.strava.com/activities/${activity.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            key={activity.id}
-          >
-            <ActivityCard>
-              <ActivityTitle>{activity.name}</ActivityTitle>
-              {activity.map?.summary_polyline && (
-                <MapPreview 
-                  style={{
-                    backgroundImage: `url(${getMapUrl(activity)})`,
-                    backgroundColor: '#f8f8f8',
-                    backgroundSize: 'cover'
-                  }}
-                />
-              )}
-              <ActivityStats>
-                <Stat>🏃‍♂️ {formatDistance(activity.distance)}</Stat>
-                <Stat>⏱️ {formatDuration(activity.moving_time)}</Stat>
-                <Stat>⚡ {formatPace(activity.moving_time, activity.distance)}</Stat>
-                <DateText>{formatDate(activity.start_date)}</DateText>
-              </ActivityStats>
-            </ActivityCard>
-          </ActivityLink>
-        );
-      })}
+      {activities.map((activity) => (
+        <ActivityLink 
+          href={`https://www.strava.com/activities/${activity.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={activity.id}
+        >
+          <ActivityCard>
+            <ActivityTitle>{activity.name}</ActivityTitle>
+            {getMapUrl(activity) && (
+              <MapPreview style={{ backgroundImage: `url(${getMapUrl(activity)})` }} />
+            )}
+            <ActivityStats>
+              <Stat>🏃‍♂️ {formatDistance(activity.distance)}</Stat>
+              <Stat>⏱️ {formatDuration(activity.moving_time)}</Stat>
+              <Stat>⚡ {formatPace(activity.moving_time, activity.distance)}</Stat>
+              <DateText>{formatDate(activity.start_date)}</DateText>
+            </ActivityStats>
+          </ActivityCard>
+        </ActivityLink>
+      ))}
     </GridContainer>
   );
 }
