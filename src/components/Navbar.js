@@ -125,8 +125,13 @@ function Navbar() {
         <NavLink to="/strava" className={location.pathname === '/strava' ? 'active' : ''}>
           Strava
         </NavLink>
-        <NavLink to="/health" className={location.pathname === '/health' ? 'active' : ''}>
-          Health
+        <NavLink 
+          as="a" 
+          href="https://github.com/FrazierAndrew" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          GitHub
         </NavLink>
       </NavLinks>
     </Nav>

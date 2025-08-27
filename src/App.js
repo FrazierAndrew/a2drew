@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import HealthDashboard from './components/HealthDashboard';
+
 import StravaGrid from './components/StravaGrid';
 import StravaCallback from './components/StravaCallback';
 import Resume from './components/Resume';
@@ -90,13 +90,7 @@ function AppContent() {
             </ContentContainer>
           </PageContainer>
         } />
-        <Route path="/health" element={
-          <PageContainer $isHome={false}>
-            <ContentContainer $isHome={false}>
-              <HealthDashboard />
-            </ContentContainer>
-          </PageContainer>
-        } />
+
         <Route path="/resume" element={
           <PageContainer $isHome={false}>
             <ContentContainer $isHome={false}>
