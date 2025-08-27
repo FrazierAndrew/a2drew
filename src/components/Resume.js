@@ -5,7 +5,7 @@ const ResumeContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 140px);
   padding: 10px;
   background-color: #f5f5f5;
   

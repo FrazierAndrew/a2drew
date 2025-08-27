@@ -22,8 +22,8 @@ const PageContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  padding-top: 80px; // Reduced since navbar blends down
-  min-height: calc(100vh - 80px);
+  padding-top: 140px; // Proper space for mobile navbar
+  min-height: calc(100vh - 140px);
   
   @media (min-width: 768px) {
     padding-top: 100px; // Space for desktop navbar
