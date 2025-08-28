@@ -7,7 +7,6 @@ const ResumeContainer = styled.div`
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #f5f5f5;
   
   @media (max-width: 767px) {
     padding: 10px;
@@ -18,9 +17,9 @@ const PDFEmbed = styled.object`
   width: 100%;
   max-width: 800px;
   height: 90vh;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   background-color: white;
   
   @media (max-width: 767px) {

@@ -14,8 +14,8 @@ const PageContainer = styled.div`
   margin: 0;
   padding: 0;
   background: ${props => props.$isHome ? 
-    'linear-gradient(135deg, #e9ecef 0%, rgba(175, 211, 243, 0.9) 100%)' : 
-    '#e9ecef'};
+    'transparent' : 
+    'hsl(217, 23%, 61%)'};
   font-family: Arial, sans-serif;
   position: relative;
   overflow-x: hidden;

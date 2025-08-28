@@ -7,7 +7,6 @@ const StagingContainer = styled.div`
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background: radial-gradient(1200px 800px at 50% 0%, #0f1220, #090b14 60%, #05060d);
   @media (max-width: 767px) { padding: 10px; }
 `;
 
@@ -89,11 +88,18 @@ function Staging() {
   // Resize canvas to device pixels for crispness
   useEffect(() => {
     const canvas = canvasRef.current;
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    // Limit DPR on mobile for better performance
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const dpr = Math.max(1, Math.min(isMobile ? 1.5 : 2, window.devicePixelRatio || 1));
     const resize = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       canvas.width = Math.round(rect.width * dpr);
       canvas.height = Math.round(rect.height * dpr);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      // Scale the context to match DPR
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
     };
     resize();
     const obs = new ResizeObserver(resize);
@@ -126,6 +132,9 @@ function Staging() {
     let scoreLocal = 0;
     let difficulty = 1;
 
+    // Touch/Mouse controls for mobile
+    const touch = { active: false, x: 0, y: 0, startX: 0, startY: 0 };
+    
     const onKey = (e, down) => {
       const k = e.key.toLowerCase();
       if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d',' '].includes(k)) {
@@ -133,8 +142,50 @@ function Staging() {
       }
       if (down) keys.add(k); else keys.delete(k);
     };
+    
+    const onTouchStart = (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const clientTouch = e.touches[0] || e.changedTouches[0];
+      touch.active = true;
+      touch.startX = touch.x = (clientTouch.clientX - rect.left) * (canvas.width / rect.width);
+      touch.startY = touch.y = (clientTouch.clientY - rect.top) * (canvas.height / rect.height);
+    };
+    
+    const onTouchMove = (e) => {
+      if (!touch.active) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const clientTouch = e.touches[0] || e.changedTouches[0];
+      touch.x = (clientTouch.clientX - rect.left) * (canvas.width / rect.width);
+      touch.y = (clientTouch.clientY - rect.top) * (canvas.height / rect.height);
+    };
+    
+    const onTouchEnd = (e) => {
+      e.preventDefault();
+      touch.active = false;
+    };
+    
+    // Add event listeners
     window.addEventListener('keydown', e => onKey(e, true));
     window.addEventListener('keyup',   e => onKey(e, false));
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: false });
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      touch.active = true;
+      touch.startX = touch.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      touch.startY = touch.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    });
+    canvas.addEventListener('mousemove', (e) => {
+      if (!touch.active) return;
+      const rect = canvas.getBoundingClientRect();
+      touch.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      touch.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    });
+    canvas.addEventListener('mouseup', () => { touch.active = false; });
+    canvas.addEventListener('mouseleave', () => { touch.active = false; });
 
     const rand = (a,b)=> a + Math.random()*(b-a);
     const addAsteroid = () => {
@@ -178,12 +229,34 @@ function Staging() {
       scoreLocal += dt * (0.8 + difficulty*0.2);
       setScore(Math.floor(scoreLocal));
 
-      // Input
+      // Input - keyboard and touch/mouse
       let ax=0, ay=0;
+      
+      // Keyboard input
       if (keys.has('arrowleft')||keys.has('a')) ax -= 1;
       if (keys.has('arrowright')||keys.has('d')) ax += 1;
       if (keys.has('arrowup')||keys.has('w')) ay -= 1;
       if (keys.has('arrowdown')||keys.has('s')) ay += 1;
+      
+      // Touch/Mouse input - move toward touch position
+      if (touch.active) {
+        const dx = touch.x - player.x;
+        const dy = touch.y - player.y;
+        const distance = Math.hypot(dx, dy);
+        
+        if (distance > player.r * 2) { // Only move if touch is away from player
+          const deadzone = player.r * 1.5;
+          if (distance > deadzone) {
+            ax = dx / distance;
+            ay = dy / distance;
+            // Scale input based on distance for better control
+            const inputScale = Math.min(1, distance / (canvas.width * 0.3));
+            ax *= inputScale;
+            ay *= inputScale;
+          }
+        }
+      }
+      
       const len = Math.hypot(ax,ay) || 1;
       player.vx += (ax/len) * player.speed * 0.6;
       player.vy += (ay/len) * player.speed * 0.6;
@@ -298,9 +371,18 @@ function Staging() {
 
     const loop = (now) => {
       const dt = Math.min(50, now - last) / 1000 * 60; // normalize (~60fps units)
-      last = now;
-      update(dt);
-      render();
+      
+      // Mobile performance optimization
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const targetFPS = isMobile ? 45 : 60;
+      const frameTime = 1000 / targetFPS;
+      
+      if (now - last >= frameTime || !isMobile) {
+        last = now;
+        update(dt);
+        render();
+      }
+      
       if (!dead && running) rafRef.current = requestAnimationFrame(loop);
     };
     last = performance.now();
@@ -310,6 +392,13 @@ function Staging() {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('keydown', e => onKey(e,true));
       window.removeEventListener('keyup', e => onKey(e,false));
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', onTouchEnd);
+      canvas.removeEventListener('mousedown', () => {});
+      canvas.removeEventListener('mousemove', () => {});
+      canvas.removeEventListener('mouseup', () => {});
+      canvas.removeEventListener('mouseleave', () => {});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [running]); // restart loop on (re)start
@@ -323,7 +412,7 @@ function Staging() {
     <StagingContainer>
       <StagingContent>
         <Header>
-          <h2><span className="dot" />⚡ Neon Dodge — Staging</h2>
+          <h2><span className="dot" />⚡ Neon Dodge Game</h2>
           <div className="meta">
             <div>Score: {score}</div>
             <div>Best: {best}</div>
@@ -342,7 +431,7 @@ function Staging() {
             <Overlay>
               <div className="panel">
                 <h3>Welcome to Neon Dodge</h3>
-                <p>Move with <span className="kbd">WASD</span> / <span className="kbd">Arrow Keys</span>. Avoid the neon asteroids. Collect glowing orbs for bonus points.</p>
+                <p>Move with <span className="kbd">WASD</span> / <span className="kbd">Arrow Keys</span> or touch/click to move. Avoid the neon asteroids. Collect glowing orbs for bonus points.</p>
                 <button className="btn" onClick={start}>Start Game</button>
               </div>
             </Overlay>

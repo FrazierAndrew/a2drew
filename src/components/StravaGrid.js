@@ -12,15 +12,18 @@ const GridContainer = styled.div`
 `;
 
 const ActivityCard = styled.div`
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 16px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(10px);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.95);
   }
 `;
 

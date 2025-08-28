@@ -8,10 +8,10 @@ const Nav = styled.nav`
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(15px);
   border-radius: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.25);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -85,8 +85,8 @@ const StagingLink = styled(Link)`
   transition: all 0.3s ease;
   text-align: center;
   letter-spacing: 0.025em;
-  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)'};
-  border: 2px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.4)'};
+  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.2)'};
+  border: 2px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.3)'};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   min-height: 44px;
@@ -105,15 +105,15 @@ const StagingLink = styled(Link)`
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.28);
+    border: 2px solid rgba(255, 255, 255, 0.35);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.45);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   }
 `;
@@ -129,8 +129,8 @@ const NavLink = styled(Link)`
   transition: all 0.3s ease;
   text-align: center;
   letter-spacing: 0.025em;
-  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)'};
-  border: 2px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.4)'};
+  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.2)'};
+  border: 2px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.3)'};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   min-height: 44px;
@@ -146,15 +146,15 @@ const NavLink = styled(Link)`
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.28);
+    border: 2px solid rgba(255, 255, 255, 0.35);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.45);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   }
 `;
@@ -191,7 +191,7 @@ function Navbar() {
       </NavLinks>
       <StagingContainer>
         <StagingLink to="/staging" className={location.pathname === '/staging' ? 'active' : ''}>
-          Staging
+          Game
         </StagingLink>
       </StagingContainer>
     </Nav>
