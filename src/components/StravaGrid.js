@@ -1,230 +1,183 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { stravaService } from '../services/stravaService';
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 50px;
 `;
 
-const ActivityCard = styled.div`
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  backdrop-filter: blur(10px);
+const FeaturedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1400px;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 0.95);
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
   }
 `;
 
-const ActivityTitle = styled.h3`
-  margin: 0 0 8px 0;
-  color: rgb(47, 43, 36);
-  font-size: 1.1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const ActivityStats = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 12px;
+const FeaturedSection = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-width: 600px;
+  width: 100%;
+  flex: 1;
+  min-height: 600px;
+  
+  @media (min-width: 768px) {
+    height: 100%;
+  }
 `;
 
-const Stat = styled.div`
-  font-size: 0.9rem;
-  color: rgb(53, 57, 61);
+const FeaturedTitle = styled.h1`
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  
+  @media (min-width: 768px) {
+    font-size: 2.2rem;
+  }
+`;
+
+const FeaturedSubtitle = styled.p`
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin: 0;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+  min-height: 60px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
 `;
 
-const MapPreview = styled.div`
-  width: 100%;
-  height: 150px;
-  border-radius: 4px;
-  margin: 8px 0;
-  background-color: #f5f5f5;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
-  overflow: hidden;
-`;
-
-const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 40px;
-  color: rgb(53, 57, 61);
-`;
-
-const ConnectButton = styled.a`
-  display: inline-block;
-  background-color: #FC4C02;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-  margin: 20px auto;
-  text-align: center;
-
-  &:hover {
-    background-color: #E34402;
-  }
-`;
-
-const CenterContainer = styled.div`
+const StravaContainer = styled.div`
   display: flex;
   justify-content: center;
+  padding: 20px;
+`;
+
+const StravaSection = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  min-height: 200px;
+  gap: 15px;
 `;
 
-const ActivityLink = styled.a`
-  text-decoration: none;
-  color: inherit;
-  display: block;
-
-  &:hover {
-    text-decoration: none;
-  }
+const SectionTitle = styled.h2`
+  color: #2c3e50;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
 `;
 
-const DateText = styled.span`
-  color: #666;
-  font-size: 0.85rem;
+const StravaEmbed = styled.iframe`
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: white;
 `;
 
 function StravaGrid() {
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [hasStaticData, setHasStaticData] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   useEffect(() => {
-    // First try static pre-fetched data
-    (async () => {
-      try {
-        const res = await fetch('/strava_activities.json', { cache: 'no-cache' });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setHasStaticData(true);
-            setActivities(data);
-            setLoading(false);
-            return; // done
-          }
-        }
-      } catch (e) {
-        // ignore and fall through to OAuth
-      }
+    // Load Strava embed script
+    const script = document.createElement('script');
+    script.src = 'https://strava-embeds.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
 
-      // Fallback to OAuth flow (local only)
-      const token = localStorage.getItem('strava_access_token');
-      if (token) {
-        setIsAuthenticated(true);
-        fetchActivities();
-      } else {
-        setLoading(false);
+    return () => {
+      // Cleanup script on unmount
+      const existingScript = document.querySelector('script[src="https://strava-embeds.com/embed.js"]');
+      if (existingScript) {
+        document.body.removeChild(existingScript);
       }
-    })();
+    };
   }, []);
 
-  const fetchActivities = async () => {
-    try {
-      const data = await stravaService.getActivities();
-      setActivities(data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching Strava activities:', error);
-      setLoading(false);
-      setIsAuthenticated(false);
-    }
-  };
-
-  const formatDistance = (meters) => {
-    const miles = (meters / 1609.34).toFixed(2);
-    return `${miles} mi`;
-  };
-
-  const formatDuration = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-  };
-
-  const formatPace = (totalSeconds, meters) => {
-    const minutesPerMile = (totalSeconds / 60) / (meters / 1609.34);
-    const minutes = Math.floor(minutesPerMile);
-    const remainingSeconds = Math.round((minutesPerMile - minutes) * 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}/mi`;
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
-  };
-
-  const getMapUrl = (activity) => {
-    if (!activity.map?.summary_polyline) return null;
-    // Keep placeholder/fallback strategy; static thumbnails often require auth, so show none if unavailable
-    return null;
-  };
-
-  if (loading) {
-    return <LoadingMessage>Loading activities...</LoadingMessage>;
-  }
-
-  if (!hasStaticData && !isAuthenticated) {
-    const authUrl = `https://www.strava.com/oauth/authorize?client_id=174379&response_type=code&redirect_uri=${encodeURIComponent(window.location.origin + '/callback')}&scope=activity:read_all`;
-    return (
-      <CenterContainer>
-        <div style={{ textAlign: 'center' }}>
-          <p>Static activities not found. To refresh locally, connect to Strava, then run the fetch script.</p>
-          <ConnectButton href={authUrl}>Connect with Strava (local refresh)</ConnectButton>
-        </div>
-      </CenterContainer>
-    );
-  }
-
   return (
-    <GridContainer>
-      {activities.map((activity) => (
-        <ActivityLink 
-          href={`https://www.strava.com/activities/${activity.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          key={activity.id}
-        >
-          <ActivityCard>
-            <ActivityTitle>{activity.name}</ActivityTitle>
-            {getMapUrl(activity) && (
-              <MapPreview style={{ backgroundImage: `url(${getMapUrl(activity)})` }} />
-            )}
-            <ActivityStats>
-              <Stat>🏃‍♂️ {formatDistance(activity.distance)}</Stat>
-              <Stat>⏱️ {formatDuration(activity.moving_time)}</Stat>
-              <Stat>⚡ {formatPace(activity.moving_time, activity.distance)}</Stat>
-              <DateText>{formatDate(activity.start_date)}</DateText>
-            </ActivityStats>
-          </ActivityCard>
-        </ActivityLink>
-      ))}
-    </GridContainer>
+    <PageContainer>
+      <FeaturedContainer>
+        <FeaturedSection>
+          <FeaturedTitle>Patagonia Hike</FeaturedTitle>
+          <FeaturedSubtitle>
+            Fitz Roy Circuit - The iconic mountain range that inspired the Patagonia logo
+          </FeaturedSubtitle>
+          <div 
+            className="strava-embed-placeholder" 
+            data-embed-type="activity" 
+            data-embed-id="13908228794" 
+            data-style="standard" 
+            data-from-embed="false"
+          />
+        </FeaturedSection>
+
+        <FeaturedSection>
+          <FeaturedTitle>Amazon Rainforest</FeaturedTitle>
+          <FeaturedSubtitle>
+            3 days backpacking through the Amazon rainforest - nearest hospital a day's travel away
+          </FeaturedSubtitle>
+          <div 
+            className="strava-embed-placeholder" 
+            data-embed-type="activity" 
+            data-embed-id="14120651332" 
+            data-style="standard" 
+            data-from-embed="false"
+          />
+        </FeaturedSection>
+
+        <FeaturedSection>
+          <FeaturedTitle>Bolivian Andes Summit</FeaturedTitle>
+          <FeaturedSubtitle>
+            17,454 foot summit - higher than any point in the USA. Walking felt like sprinting.
+          </FeaturedSubtitle>
+          <div 
+            className="strava-embed-placeholder" 
+            data-embed-type="activity" 
+            data-embed-id="14217508170" 
+            data-style="standard" 
+            data-from-embed="false"
+          />
+        </FeaturedSection>
+      </FeaturedContainer>
+
+      <StravaContainer>
+        <StravaSection>
+          <SectionTitle>Latest Runs</SectionTitle>
+          <StravaEmbed 
+            height="454" 
+            width="300" 
+            allowTransparency="true" 
+            scrolling="no" 
+            src="https://www.strava.com/athletes/55242448/latest-rides/f4732c4356df96ab5d4fe51a5c17c07a3d4acf09"
+            title="Latest Strava Runs"
+          />
+        </StravaSection>
+      </StravaContainer>
+    </PageContainer>
   );
 }
 

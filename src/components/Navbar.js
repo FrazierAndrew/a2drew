@@ -63,60 +63,6 @@ const NavLinks = styled.div`
   }
 `;
 
-const StagingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 1rem;
-  
-  @media (min-width: 768px) {
-    margin-top: 1.5rem;
-  }
-`;
-
-const StagingLink = styled(Link)`
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  color: #2c3e50;
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.8rem 1.2rem;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  text-align: center;
-  letter-spacing: 0.025em;
-  background: ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.2)'};
-  border: 2px solid ${props => props.className?.includes('active') ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.3)'};
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  min-width: 120px;
-
-  @media (min-width: 768px) {
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding: 1.25rem 2rem;
-    border-radius: 15px;
-    min-width: 150px;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.28);
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  }
-
-  &.active {
-    background: rgba(255, 255, 255, 0.35);
-    border: 2px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-  }
-`;
 
 const NavLink = styled(Link)`
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -189,11 +135,6 @@ function Navbar() {
           GitHub
         </NavLink>
       </NavLinks>
-      <StagingContainer>
-        <StagingLink to="/staging" className={location.pathname === '/staging' ? 'active' : ''}>
-          Game
-        </StagingLink>
-      </StagingContainer>
     </Nav>
   );
 }
