@@ -28,7 +28,7 @@ const Nav = styled.nav`
 `;
 
 const Brand = styled(Link)`
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
@@ -65,7 +65,7 @@ const NavLinks = styled.div`
 
 
 const NavLink = styled(Link)`
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   color: #2c3e50;
   text-decoration: none;
   font-size: 0.9rem;

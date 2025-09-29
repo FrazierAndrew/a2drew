@@ -6,7 +6,7 @@ const HomeContainer = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: hsl(217, 23%, 61%);
+  background: #B0C4DE;
 `;
 
 function Home() {

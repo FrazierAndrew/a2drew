@@ -14,8 +14,8 @@ const PageContainer = styled.div`
   padding: 0;
   background: ${props => props.$isHome ? 
     'transparent' : 
-    'hsl(217, 23%, 61%)'};
-  font-family: Arial, sans-serif;
+    '#B0C4DE'};
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   position: relative;
   overflow-x: hidden;
 `;
@@ -35,7 +35,7 @@ const HomeButton = styled.button`
   top: 20px;
   left: 20px;
   z-index: 1000;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.3);
