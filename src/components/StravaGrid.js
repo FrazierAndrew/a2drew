@@ -124,7 +124,7 @@ function StravaGrid() {
         <FeaturedSection>
           <FeaturedTitle>Patagonia Hike</FeaturedTitle>
           <FeaturedSubtitle>
-            Fitz Roy Circuit - The iconic mountain range that inspired the Patagonia logo
+            Hiked Fitz Roy - mountain range Patagonia's logo is based on 
           </FeaturedSubtitle>
           <div 
             className="strava-embed-placeholder" 
@@ -138,7 +138,7 @@ function StravaGrid() {
         <FeaturedSection>
           <FeaturedTitle>Amazon Rainforest</FeaturedTitle>
           <FeaturedSubtitle>
-            3 days backpacking through the Amazon rainforest - nearest hospital a day's travel away
+            3 days backpacking through the Amazon. Swam with dolphins and overcame* my fear of spiders
           </FeaturedSubtitle>
           <div 
             className="strava-embed-placeholder" 
@@ -152,7 +152,7 @@ function StravaGrid() {
         <FeaturedSection>
           <FeaturedTitle>Bolivian Andes Summit</FeaturedTitle>
           <FeaturedSubtitle>
-            17,454 foot summit - higher than any point in the USA. Walking felt like sprinting.
+            17,454 foot summit - higher than any point in the USA. Walking felt like sprinting
           </FeaturedSubtitle>
           <div 
             className="strava-embed-placeholder" 
