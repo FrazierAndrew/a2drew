@@ -124,7 +124,7 @@ function StravaGrid() {
         <FeaturedSection>
           <FeaturedTitle>Patagonia Hike</FeaturedTitle>
           <FeaturedSubtitle>
-            Hiked Fitz Roy - mountain range Patagonia's logo is based on 
+            Fitz Roy - mountain range Patagonia's logo is based on 
           </FeaturedSubtitle>
           <div 
             className="strava-embed-placeholder" 
