@@ -24,9 +24,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "fetch:strava": "node -r dotenv/config scripts/fetch_strava.js dotenv_config_path=.env.local",
-    "fetch:exchange": "node -r dotenv/config scripts/strava_exchange_code.js dotenv_config_path=.env.local"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
