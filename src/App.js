@@ -18,8 +18,9 @@ const projects = [
       "Made this for my little sister hoping she'd enjoy it. She didn't. It has simple explanations, demos, and exercises for playing with LLMs and building small projects.",
     demonstrates:
       "Flask app with chat, prompt scoring, code review, and DSA practice. You bring your own OpenAI key — the server never holds a shared one.",
-    cta: "Ask about the demo",
+    cta: "Click through the demo",
     visual: "chat",
+    href: "https://frazierandrew.github.io/ai-sandbox-demo/",
   },
   {
     title: "Open Roles",
