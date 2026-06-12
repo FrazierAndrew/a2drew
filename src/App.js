@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 const links = [
@@ -13,58 +13,246 @@ const links = [
 
 const projects = [
   {
-    title: "Intro to AI sandbox",
-    description:
-      "Made this for my little sister hoping she'd enjoy it. She didn't. It has simple explanations, demos, and exercises for playing with LLMs and building small projects.",
-    demonstrates:
-      "Flask app with chat, prompt scoring, code review, and DSA practice. You bring your own OpenAI key — the server never holds a shared one.",
-    cta: "Click through the demo",
-    visual: "chat",
-    href: "https://frazierandrew.github.io/ai-sandbox-demo/",
-  },
-  {
-    title: "Open Roles",
-    description:
-      "A scanner that pulls every open Forward Deployed Engineer role in the Bay Area into one list with direct apply links. Built it because checking the same job boards every day got old.",
-    demonstrates:
-      "Python scraping and aggregation. A small tool that solved a real problem I had.",
+    title: "stem-lab",
+    description:"Built to learn how songs are made. It splits an mp3 audio track into six stems, then after some magic, generates a step-by-step how to rebuild the song in Ableton. Plans are far from perfect, but ramp up production knowledge quicker than anything else I've come across",
     cta: "View project",
-    visual: "roles",
-    href: "https://github.com/FrazierAndrew/open-roles",
+    visual: "stems",
+    href: "https://github.com/FrazierAndrew/stem-lab",
+    flag: "Personal favorite",
   },
   {
     title: "PhoneAgentV2",
     description:
       "An automated phone line for medical appointment intake. It collects patient info over a Twilio call — insurance, referral, address with validation — then schedules the appointment and emails a confirmation.",
-    demonstrates:
-      "Twilio voice flows wired to an LLM, plus the unglamorous parts: validation, scheduling, email.",
     cta: "View project",
     visual: "phone",
     href: "https://github.com/FrazierAndrew/PhoneAgentV2",
   },
   {
-    title: "stem-lab",
+    title: "Intro to AI sandbox",
     description:
-      "Splits a finished track into six stems with Demucs, runs signal analysis on each one, and generates a step-by-step plan for rebuilding the song in Ableton. How I learn how my favorite tracks were made.",
-    demonstrates:
-      "Audio DSP with librosa — tempo and key detection, onsets, section mapping — turned into JSON plans and human-readable guides.",
+      "Spent a good amount of time making my little sister an intro to AI kit (she never opened it) ",
     cta: "View project",
-    visual: "stems",
-    href: "https://github.com/FrazierAndrew/stem-lab",
+    visual: "chat",
+    href: "https://frazierandrew.github.io/ai-sandbox-demo/",
+  },
+  {
+    title: "Open Roles",
+    description: "Crawler for SWE and FDE jobs in the bay ares. Use to figure out what tech stacks and skills are in demand.",
+    cta: "View project",
+    visual: "roles",
+    href: "https://github.com/FrazierAndrew/open-roles",
   },
   {
     title: "song-recommender",
     description:
       "Ranks songs I haven't heard by how much I'll probably like them. Builds a taste profile from the audio signature of songs I already like, then scores everything else against it. Fully offline — no APIs.",
-    demonstrates:
-      "53-dimensional feature extraction (tempo, timbre, pitch, energy) and weighted-consensus cosine ranking in plain numpy.",
     cta: "View project",
     visual: "ranks",
     href: "https://github.com/FrazierAndrew/song-recommender",
   },
 ];
 
+const hotkeyGroups = [
+  {
+    title: "macOS — apps & windows",
+    keys: [
+      { combo: ["⌘", "Tab"], desc: "switch between recently used apps" },
+      { combo: ["⌘", "H"], desc: "hide the current app" },
+      { combo: ["⌘", "W"], desc: "close current tab / window" },
+      { combo: ["⌘", "Q"], desc: "quit the app entirely" },
+      { combo: ["⌘", "`"], desc: "cycle windows of the same app" },
+    ],
+  },
+  {
+    title: "Chrome — tabs",
+    keys: [
+      { combo: ["⌘", "T"], desc: "open a new tab" },
+      { combo: ["Ctrl", "Tab"], desc: "next tab" },
+      { combo: ["Ctrl", "⇧", "Tab"], desc: "previous tab" },
+      { combo: ["⌘", "⇧", "T"], desc: "reopen last closed tab (lifesaver)" },
+    ],
+  },
+  {
+    title: "Chrome — getting around)",
+    keys: [
+      { combo: ["⌘", "L"], desc: "jump to the address bar" },
+      { combo: ["⌘", "["], desc: "back" },
+      { combo: ["⌘", "]"], desc: "forward" },
+    ],
+  },
+];
+
+const nowPlaying = {
+  title: "The Color of Nothing",
+  artist: "ford.",
+  art: "/now-playing.jpg",
+  audio: "/now-playing.mp3",
+  href: "https://open.spotify.com/track/7AxFLOKzAkxhkWKXZC7WVM",
+};
+
+function NowPlaying() {
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const toggle = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      audio
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  return (
+    <div className={`winamp${isPlaying ? " playing" : ""}`}>
+      <div className="winamp-titlebar">
+        <span>NOW PLAYING</span>
+        <span className="winamp-buttons">_ □ ✕</span>
+      </div>
+      <div className="winamp-body">
+        <a
+          className="winamp-art"
+          href={nowPlaying.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="open in Spotify"
+        >
+          <img src={nowPlaying.art} alt={`${nowPlaying.title} cover`} />
+        </a>
+        <div className="winamp-info">
+          <div className="winamp-lcd">
+            <span className="winamp-scroll">
+              ► {nowPlaying.artist} — {nowPlaying.title} &nbsp;&nbsp;&nbsp; ►{" "}
+              {nowPlaying.artist} — {nowPlaying.title}
+            </span>
+          </div>
+          <div className="winamp-progress">
+            <i style={{ width: `${progress}%` }} />
+          </div>
+          <div className="winamp-controls">
+            <button
+              className="winamp-play"
+              onClick={toggle}
+              type="button"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? "❚❚" : "►"}
+            </button>
+            <span className="winamp-eq" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
+            <span className="winamp-kbps"></span>
+          </div>
+        </div>
+      </div>
+      <audio
+        ref={audioRef}
+        src={nowPlaying.audio}
+        preload="metadata"
+        onTimeUpdate={(e) => {
+          const a = e.currentTarget;
+          if (a.duration) setProgress((a.currentTime / a.duration) * 100);
+        }}
+        onEnded={() => {
+          setIsPlaying(false);
+          setProgress(0);
+        }}
+      />
+      <div className="np-callout" aria-hidden="true">
+        <span className="np-note">
+         My most played song on Spotify ---> 
+        </span>
+        <span className="np-arrow">→</span>
+      </div>
+    </div>
+  );
+}
+
+const powerTools = [
+  { name: "Rectangle Pro", desc: "keyboard-driven window snapping & saved layouts" },
+  { name: "Karabiner-Elements", desc: "remap keys and build custom modifier layers" },
+  { name: "Alfred 5", desc: "Spotlight on steroids — launch, search, run workflows" },
+  { name: "AltTab", desc: "real Windows-style Alt-Tab to switch windows, not just apps" },
+  { name: "Maccy", desc: "clipboard history — paste anything you copied earlier" },
+  { name: "MTMR", desc: "My TouchBar My Rules: if youve still got a touch bar - fully customize it" },
+];
+
+const bucketList = [
+  { text: "See a penguin in the wild", done: true },
+  { text: "Standing backflip", done: true },
+  { text: "Produce an EDM song from scratch", done: false },
+  { text: "Swim with a blue whale", done: false },
+  { text: "Gainer off a diving board", done: true },
+  { text: "Go to that one lookout from Tenet in Italy", done: false },
+  { text: "Touch Antarctica", done: false },
+  { text: "Cage dive with sharks", done: false },
+  { text: "Not have a smartphone", done: false },
+  { text: "Live in California", done: true },
+  { text: "Surf in Cape Town", done: false },
+  { text: "Get wine drunk in Mumbai", done: false },
+  { text: "Go to a 3 Michelin star restaurant", done: false },
+  { text: "Amazon Rainforest", done: true },
+  { text: "Multi-day trek in Alaska", done: false },
+  { text: "Look at El Capitan for 15 mins in silence", done: true },
+  { text: "See hyenas in the wild", done: false },
+  { text: "Salt flats in Utah", done: false },
+  { text: "Go in a hot air balloon", done: false },
+  { text: "Crocodile in the wild", done: false },
+  { text: "Perform at EDC Las Vegas", done: false },
+];
+
+function BucketListView({ onRevert }) {
+  const doneCount = bucketList.filter((item) => item.done).length;
+  return (
+    <div className="bucket-view">
+      <button className="revert-btn" onClick={onRevert} type="button">
+        &laquo; revert
+      </button>
+      <h1 className="bucket-title">
+        <span className="blinky">Andrew's Bucket List</span>
+      </h1>
+      <p className="bucket-key">
+        {doneCount} / {bucketList.length} done · items stamped{" "}
+        <span className="done-stamp">DID IT!</span> are in the can
+      </p>
+      <ol className="bucket-ol">
+        {bucketList.map((item) => (
+          <li className={item.done ? "done" : ""} key={item.text}>
+            <span className="bucket-text">{item.text}</span>
+            {item.done && <span className="done-stamp">DID IT!</span>}
+          </li>
+        ))}
+      </ol>
+      <button className="revert-btn revert-btn-bottom" onClick={onRevert} type="button">
+        &laquo; back to the website
+      </button>
+    </div>
+  );
+}
+
 function App() {
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "light";
+    return window.localStorage.getItem("site-theme") || "light";
+  });
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [bucketOpen, setBucketOpen] = useState(false);
+  const [username, setUsername] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem("site-username") || "";
+  });
+  const [usernameInput, setUsernameInput] = useState("");
   const [health, setHealth] = useState({
     status: "checking",
     loadTime: "--",
@@ -85,7 +273,7 @@ function App() {
             ),
           )
         : Math.max(1, Math.round(performance.now()));
-      const requiredSectionIds = ["work", "about"];
+      const requiredSectionIds = ["work"];
       const readySections = requiredSectionIds.filter((id) =>
         document.getElementById(id),
       ).length;
@@ -117,135 +305,268 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem("site-theme", theme);
+  }, [theme]);
+
+  const isDark = theme === "dark";
+  const toggleTheme = () => setTheme(isDark ? "light" : "dark");
+  const openLogin = () => {
+    setUsernameInput(username);
+    setIsLoginOpen(true);
+  };
+  const logUsername = (event) => {
+    event.preventDefault();
+    const nextUsername = usernameInput.trim();
+    if (!nextUsername) return;
+
+    setUsername(nextUsername);
+    setIsLoginOpen(false);
+    window.localStorage.setItem("site-username", nextUsername);
+    console.info("a2drew.com login username:", nextUsername);
+  };
+
+  if (bucketOpen) {
+    return <BucketListView onRevert={() => setBucketOpen(false)} />;
+  }
+
   return (
     <div className="site-shell">
-      <header className="topbar">
-        <a className="brand" href="#top" aria-label="Andrew Frazier home">
-          Andrew Frazier
-        </a>
-        <nav className="nav-links" aria-label="Primary navigation">
-          <a href="#work">Work</a>
-          <a href="#about">About</a>
-          <a href="/Andrew_Resume.pdf">Resume</a>
-        </nav>
-      </header>
+      <aside className="retro-sidebar">
+        <a href="#top">Page top</a>
+        <a href="#work">Projects</a>
+        <a href="/Andrew_Resume.pdf">Resume</a>
+        <a href="#bottom">Page bottom</a>
+        <div></div>
+        <h1></h1>
+        <h1></h1>
+        <h1></h1>
 
-      <main id="top">
-        <section className="hero section">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              Backend systems · Reliability tooling · AI applications
-            </p>
-            <h1>Andrew Frazier</h1>
-            <p className="positioning">
-              Spent 3 years teaching data structures and algorithms to thousands
-              of students at UW, then almost 3 years building Azure Database for
-              PostgreSQL at Microsoft. Hoping what's next involves good people
-              and happy customers.
-            </p>
-            <p className="supporting">
-              I like building the systems behind the scenes: incident
-              diagnosis, fleet telemetry, rollout monitoring — and lately,
-              making LLM products actually remember things.
-            </p>
-            <div className="hero-actions" aria-label="Profile links">
-              {links.map((link) => (
-                <a
-                  className={
-                    link.variant === "primary"
-                      ? "button button-primary"
-                      : "button"
-                  }
-                  href={link.href}
-                  key={link.label}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <WebsiteHealthDashboard health={health} />
-        </section>
-
-        <section className="section section-bordered" id="work">
-          <div className="section-heading">
-            <p className="eyebrow">Selected Work</p>
-            <h2>Things I've built</h2>
-            <p>
-              Side projects, all real and all mine. The serious infrastructure
-              work lives in my resume — this is what I build on my own time.
-            </p>
-          </div>
-
-          <div className="project-grid">
-            {projects.map((project) => (
-              <article className="project-card" key={project.title}>
-                <ProjectVisual type={project.visual} />
-                <div className="card-body">
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <p className="demonstrates">
-                    <span>Demonstrates:</span> {project.demonstrates}
-                  </p>
-                  <a
-                    className="text-link"
-                    style={{ fontSize: "1.5rem" }}
-                    href={project.href || "#contact"}
-                    target={project.href ? "_blank" : undefined}
-                    rel={project.href ? "noopener noreferrer" : undefined}
-                  >
-                    {project.cta}
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section about-section section-bordered" id="about">
-          <div className="section-heading compact">
-            <p className="eyebrow">About</p>
-            <h2>The short version</h2>
-          </div>
-          <div className="about-copy">
-            <p>
-              At Microsoft I worked on Azure Database for PostgreSQL: built an
-              incident diagnosis and remediation platform, caught a scaling
-              flaw in Autonomous Tuning before it shipped, and built the
-              telemetry that watched 100,000+ servers. Most recently I was the
-              4th engineer at TrainLoop (YC W25), rebuilding an LLM product's
-              memory system. Before all that, three years as a TA teaching
-              data structures at UW.
-            </p>
-            <p>
-              I'm looking for backend, product, or forward-deployed engineering
-              work — ideally close enough to customers that I can see whether
-              what I built actually helped.
-            </p>
-          </div>
-        </section>
-      </main>
-
-      <footer className="footer" id="contact">
-        <div>
-          <strong>Andrew Frazier</strong>
-          <p>Backend engineer in San Francisco.</p>
+        <div className="vertical-name" aria-hidden="true">
+          {"nostalgic exception:".split("").map((ch, i) => (
+            <span
+              key={i}
+              style={{
+                transform: `translateX(${Math.sin(i * 0.8) * 5}px) rotate(${
+                  Math.sin(i * 0.8) * 8
+                }deg)`,
+              }}
+            >
+              {ch}
+            </span>
+          ))}
         </div>
-        <nav aria-label="Contact links">
+        <pre className="stack-trace" aria-hidden="true">{`Exception in thread "main"
+java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
+\tat java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
+\tat java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
+\tat java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
+\tat java.base/java.util.Objects.checkIndex(Objects.java:385)
+\tat java.base/java.util.ArrayList.get(ArrayList.java:427)
+\tat com.a2drew.site.Sidebar.render(Sidebar.java:42)
+\tat com.a2drew.site.HomePage.draw(HomePage.java:88)
+\tat com.a2drew.site.HomePage.main(HomePage.java:17)`}</pre>
+      </aside>
+
+      <main className="retro-main" id="top">
+        <div className="corner-photos">
+          <NowPlaying />
+          <button
+            className="bucket-btn"
+            onClick={() => setBucketOpen(true)}
+            type="button"
+          >
+            bucket&nbsp;list
+          </button>
+          <img src="/headshot.jpg" alt="Andrew Frazier" />
+        </div>
+        <h1>Andrew Frazier's Home Page</h1>
+        <p className="hero-actions" aria-label="Profile links">
           {links.map((link) => (
             <a href={link.href} key={link.label}>
-              {link.label}
+              [{link.label}]
             </a>
           ))}
-        </nav>
-      </footer>
+          <span className="login-shell">
+            {isLoginOpen ? (
+              <form className="login-form" onSubmit={logUsername}>
+                <label className="sr-only" htmlFor="username-input">
+                  Username
+                </label>
+                <input
+                  autoComplete="username"
+                  autoFocus
+                  id="username-input"
+                  onChange={(event) => setUsernameInput(event.target.value)}
+                  placeholder="username"
+                  type="text"
+                  value={usernameInput}
+                />
+                <button type="submit">Log</button>
+              </form>
+            ) : (
+              <button className="login-trigger" onClick={openLogin} type="button">
+                {username ? username : "Login"}
+              </button>
+            )}
+          </span>
+          <button
+            aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+            aria-pressed={isDark}
+            className="theme-switch"
+            onClick={toggleTheme}
+            type="button"
+          >
+            <span className="theme-switch-track">
+              <span className="theme-switch-thumb" />
+            </span>
+            <span className="theme-switch-text">
+              {isDark ? "lights on" : "lights off"}
+            </span>
+          </button>
+        </p>
+        <hr />
+
+        <div className="body-columns" id="work">
+          <div className="left-col">
+            <div className="block c0 hello-block">
+              <h3>Welcome!</h3>
+              <p>
+              </p>
+              <p>
+                As of June 2026, I'm now living in San Francisco, for fun I'm learning how to produce music in Ableton, and most importantly learning how to navigate life with my new partner, 
+                Claude Opus 4.8. 
+              </p>
+              <p>
+                For employment purposes, see the{" "}
+                <a href="/Andrew_Resume.pdf">RESUME</a> below. Scroll further for life alterting Mac shortcuts and apps. 
+              </p>
+            </div>
+
+            <div className="block c3 resume-block">
+              <h3>
+                Resume
+                <a className="resume-open" href="/Andrew_Resume.pdf" target="_blank" rel="noopener noreferrer">
+                  open full page
+                </a>
+              </h3>
+              <object
+                aria-label="Andrew Frazier resume"
+                data="/Andrew_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
+                type="application/pdf"
+              >
+                <p>
+                  Your browser can't show the PDF inline.{" "}
+                  <a href="/Andrew_Resume.pdf">Download the resume</a> instead.
+                </p>
+              </object>
+            </div>
+
+          </div>
+
+          <div className="right-col">
+            <h2 className="col-title">Projects</h2>
+            <div className="project-masonry">
+              {projects.map((project, index) => (
+                <div
+                  className={`block c${(index % 5) + 1}`}
+                  key={project.title}
+                >
+                  <h3>
+                    {project.title}
+                    {project.flag && (
+                      <span className="new-flag">{project.flag}</span>
+                    )}
+                  </h3>
+                  <ProjectVisual type={project.visual} />
+                  <p>{project.description}</p>
+                  <p className="cta-row">
+                    <a
+                      className="cta-button"
+                      href={project.href || "#contact"}
+                      target={project.href ? "_blank" : undefined}
+                      rel={project.href ? "noopener noreferrer" : undefined}
+                    >
+                      {project.cta}
+                    </a>
+                  </p>
+                </div>
+              ))}
+
+              <WebsiteHealthDashboard health={health} />
+            </div>
+          </div>
+        </div>
+
+        <div className="block c2 hotkeys-block">
+          <h3>
+            
+            <h3>Life Changing Shortcuts</h3>
+            <p className="hotkeys-intro">
+            :0
+          </p>
+          </h3>
+          <p className="hotkeys-intro">
+          </p>
+          <div className="hotkeys-cols">
+            {hotkeyGroups.map((group) => (
+              <div className="hotkey-group" key={group.title}>
+                <h4>{group.title}</h4>
+                <ul>
+                  {group.keys.map((k) => (
+                    <li key={k.desc}>
+                      <span className="combo">
+                        {k.combo.map((part, i) => (
+                          <span key={i}>
+                            {i > 0 && <span className="plus">+</span>}
+                            <kbd>{part}</kbd>
+                          </span>
+                        ))}
+                      </span>
+                      <span className="hotkey-desc">{k.desc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="block c5 tools-block">
+          <h3>Life changing Apps</h3>
+          <p className="hotkeys-intro">
+            :0
+          </p>
+          <ul className="tools-list">
+            {powerTools.map((tool) => (
+              <li key={tool.name}>
+                <b>{tool.name}</b> &mdash; {tool.desc}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <hr />
+        <p className="footer" id="contact">
+          <span id="bottom">Andrew Frazier · San Francisco · </span>
+          {links.map((link) => (
+            <a href={link.href} key={link.label}>
+              [{link.label}]
+            </a>
+          ))}
+          <br />
+          <i>Yes, it is supposed to look like this.</i>
+        </p>
+      </main>
     </div>
   );
 }
 
 function WebsiteHealthDashboard({ health }) {
   const [mood, setMood] = useState("curious");
+  const [megaSurprise, setMegaSurprise] = useState(false);
   const [stats, setStats] = useState({
     seconds: 0,
     clicks: 0,
@@ -320,16 +641,30 @@ function WebsiteHealthDashboard({ health }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!megaSurprise) return undefined;
+
+    document.body.classList.add("mega-surprise-active");
+    const timeout = window.setTimeout(() => {
+      setMegaSurprise(false);
+    }, 5000);
+
+    return () => {
+      document.body.classList.remove("mega-surprise-active");
+      window.clearTimeout(timeout);
+    };
+  }, [megaSurprise]);
+
   const curiosity = Math.min(
     99,
-    36 + stats.clicks * 7 + stats.scrolls * 9 + stats.resumeHovers * 12 + stats.confetti * 6,
+    11 + stats.clicks * 3 + stats.scrolls * 4 + stats.resumeHovers * 10 + stats.confetti * 8,
   );
   const buttonPokes = stats.clicks + stats.confetti;
   const wiggleLevel = Math.min(99, 18 + stats.wiggles * 3);
   const resumeTemptation = Math.min(99, 20 + stats.resumeHovers * 25);
   const moodLabel =
     curiosity > 82
-      ? "invested"
+      ? "interactive"
       : stats.resumeHovers > 0
         ? "resume-curious"
         : stats.clicks > 2
@@ -337,7 +672,7 @@ function WebsiteHealthDashboard({ health }) {
           : mood;
   const moodEmoji =
     {
-      invested: "🤩",
+      interactive: "🤩",
       "resume-curious": "👀",
       clicky: "⚡",
       delighted: "😄",
@@ -352,10 +687,11 @@ function WebsiteHealthDashboard({ health }) {
 
   const makeItHappy = () => {
     setMood("delighted");
+    setMegaSurprise(true);
     setStats((current) => ({
       ...current,
       confetti: current.confetti + 1,
-      events: ["made the website happy", ...current.events].slice(0, 3),
+      events: ["detonated mega-suprise", ...current.events].slice(0, 3),
     }));
   };
 
@@ -373,6 +709,80 @@ function WebsiteHealthDashboard({ health }) {
       className={`hero-panel health-dashboard mood-${moodLabel}`}
       aria-label="Interactive website mood dashboard"
     >
+      {megaSurprise && (
+        <div className="mega-surprise" aria-hidden="true">
+          <svg className="mega-warp-filter" focusable="false">
+            <filter id="mega-warp-filter" x="-18%" y="-18%" width="136%" height="136%">
+              <feTurbulence
+                baseFrequency="0.012 0.018"
+                numOctaves="2"
+                result="noise"
+                seed={stats.confetti + 7}
+                type="fractalNoise"
+              >
+                <animate
+                  attributeName="baseFrequency"
+                  dur="5s"
+                  fill="freeze"
+                  values="0.012 0.018;0.052 0.078;0.027 0.044;0.006 0.011"
+                />
+              </feTurbulence>
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="0"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              >
+                <animate
+                  attributeName="scale"
+                  dur="5s"
+                  fill="freeze"
+                  values="0;52;84;38;0"
+                />
+              </feDisplacementMap>
+            </filter>
+          </svg>
+          <div className="mega-warp-vignette" />
+          <div className="mega-warp-iris" />
+          <div className="mega-warp-tunnel">
+            {Array.from({ length: 11 }, (_, i) => (
+              <span
+                key={`fold-${stats.confetti}-${i}`}
+                style={{
+                  "--size": `${115 - i * 9}vmax`,
+                  "--radius": `${34 + i * 8}px`,
+                  "--alpha": 0.54 - i * 0.025,
+                  "--start-rotate": `${i * 7}deg`,
+                  "--start-scale": 1 - i * 0.035,
+                  "--open-scale": 1.18 - i * 0.03,
+                  "--open-rotate": `${i * -10}deg`,
+                  "--open-tight-scale": 0.9 - i * 0.028,
+                  "--mid-rotate": `${190 - i * 15}deg`,
+                  "--mid-scale": 0.34 - i * 0.012,
+                  "--mid-opacity": 0.9 - i * 0.035,
+                  "--end-rotate": `${320 - i * 12}deg`,
+                  "--end-scale": 0.82 - i * 0.018,
+                }}
+              />
+            ))}
+          </div>
+          {Array.from({ length: 9 }, (_, i) => (
+            <span
+              className="mega-warp-ribbon"
+              key={`ribbon-${stats.confetti}-${i}`}
+              style={{
+                "--i": i,
+                "--turn": `${i * 19 - 76}deg`,
+                "--ribbon-opacity": 0.82 - i * 0.055,
+                "--ribbon-mid-opacity": 0.9 - i * 0.06,
+                "--ribbon-stretch": 0.6 + i * 0.025,
+              }}
+            />
+          ))}
+          <div className="mega-warp-lens" />
+        </div>
+      )}
       {stats.confetti > 0 && (
         <div className="confetti" key={stats.confetti} aria-hidden="true">
           {Array.from({ length: 16 }, (_, i) => (
@@ -409,7 +819,7 @@ function WebsiteHealthDashboard({ health }) {
 
       <div className="health-controls" aria-label="Playful dashboard controls">
         <button onClick={makeItHappy} type="button">
-          Make it happy
+          mega-suprise
         </button>
         <button onClick={actInterested} type="button">
           Act interested
