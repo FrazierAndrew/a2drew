@@ -24,7 +24,13 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 a {
@@ -132,8 +138,8 @@ h3 {
 }
 
 .positioning {
-  color: #252a30;
-  font-size: clamp(22px, 3vw, 34px);
+  color: #3068ac;
+  font-size: 20px;
   font-weight: 650;
   line-height: 1.18;
   margin-bottom: 20px;
@@ -222,7 +228,22 @@ h3 {
 }
 
 .health-dashboard {
-  min-height: 386px;
+  overflow: hidden;
+  position: relative;
+}
+
+.health-dashboard::before {
+  background:
+    radial-gradient(
+      circle at 18% 16%,
+      rgba(31, 92, 109, 0.14),
+      transparent 28%
+    ),
+    radial-gradient(circle at 86% 12%, rgba(18, 63, 75, 0.1), transparent 30%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
 }
 
 .health-summary {
@@ -233,6 +254,8 @@ h3 {
   justify-content: space-between;
   margin-top: 28px;
   padding-bottom: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .health-summary p {
@@ -248,6 +271,138 @@ h3 {
   font-size: 44px;
   letter-spacing: 0;
   line-height: 1;
+}
+
+.live-summary {
+  margin-top: 24px;
+}
+
+.live-subtext {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.signal-orb {
+  align-items: center;
+  background:
+    radial-gradient(circle at center, var(--surface) 0 45%, transparent 46%),
+    conic-gradient(var(--accent) calc(var(--pulse) * 3.6), #e7e8e2 0);
+  border: 1px solid var(--subtle);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 8px rgba(31, 92, 109, 0.05),
+    0 18px 34px rgba(24, 27, 31, 0.08);
+  display: flex;
+  flex: 0 0 auto;
+  height: 92px;
+  justify-content: center;
+  position: relative;
+  width: 92px;
+}
+
+.signal-orb::after {
+  animation: signal-pulse 1.65s ease-in-out infinite;
+  border: 1px solid rgba(31, 92, 109, 0.26);
+  border-radius: 50%;
+  content: "";
+  inset: 12px;
+  position: absolute;
+}
+
+.signal-orb span {
+  align-items: center;
+  background: var(--accent-soft);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(31, 92, 109, 0.12);
+  color: var(--accent-strong);
+  display: flex;
+  font-size: 22px;
+  font-weight: 900;
+  height: 38px;
+  justify-content: center;
+  line-height: 1;
+  width: 38px;
+}
+
+@keyframes signal-pulse {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: scale(0.86);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.health-controls {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 18px 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.health-controls button {
+  background: var(--surface);
+  border: 1px solid var(--subtle);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  min-height: 42px;
+  padding: 0 12px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.health-controls button:hover,
+.health-controls button.active {
+  background: var(--accent-soft);
+  border-color: rgba(31, 92, 109, 0.28);
+  color: var(--accent-strong);
+  transform: translateY(-1px);
+}
+
+.live-bars {
+  align-items: end;
+  background:
+    linear-gradient(180deg, rgba(31, 92, 109, 0.06), transparent),
+    var(--surface-muted);
+  border: 1px solid var(--subtle);
+  border-radius: 8px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  height: 72px;
+  padding: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.live-bars span {
+  background: linear-gradient(
+    180deg,
+    rgba(31, 92, 109, 0.74),
+    rgba(31, 92, 109, 0.22)
+  );
+  border-radius: 4px 4px 2px 2px;
+  display: block;
+  min-height: 9px;
+  transition:
+    height 520ms ease,
+    opacity 520ms ease;
 }
 
 .health-ring {
@@ -279,7 +434,11 @@ h3 {
 }
 
 .uptime-bars span {
-  background: linear-gradient(180deg, rgba(31, 92, 109, 0.68), rgba(31, 92, 109, 0.18));
+  background: linear-gradient(
+    180deg,
+    rgba(31, 92, 109, 0.68),
+    rgba(31, 92, 109, 0.18)
+  );
   border: 1px solid rgba(31, 92, 109, 0.16);
   border-radius: 4px 4px 0 0;
   display: block;
@@ -322,6 +481,9 @@ h3 {
   border-top: 1px solid var(--subtle);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+  position: relative;
+  z-index: 1;
 }
 
 .health-check {
@@ -366,6 +528,68 @@ h3 {
   color: #8a4b16;
 }
 
+.activity-feed {
+  background: rgba(238, 238, 234, 0.72);
+  border: 1px solid var(--subtle);
+  border-radius: 8px;
+  margin-top: 18px;
+  padding: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.activity-feed > span {
+  color: var(--muted);
+  display: block;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  margin-bottom: 9px;
+  text-transform: uppercase;
+}
+
+.activity-feed p {
+  align-items: center;
+  color: var(--text);
+  display: flex;
+  font-size: 13px;
+  font-weight: 650;
+  gap: 8px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.activity-feed p + p {
+  margin-top: 8px;
+}
+
+.activity-feed i {
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(31, 92, 109, 0.1);
+  display: block;
+  flex: 0 0 auto;
+  height: 7px;
+  width: 7px;
+}
+
+.mood-delighted .signal-orb span,
+.mood-delighted .activity-feed i {
+  animation: signal-pulse 1s ease-in-out infinite;
+}
+
+.mood-impressed .live-bars span {
+  background: linear-gradient(180deg, rgba(18, 63, 75, 0.82), rgba(31, 92, 109, 0.22));
+}
+
+.mood-curious .live-bars span {
+  background: linear-gradient(
+    180deg,
+    rgba(31, 92, 109, 0.58),
+    rgba(31, 92, 109, 0.16)
+  );
+}
+
 .section-bordered {
   border-top: 1px solid var(--subtle);
 }
@@ -408,8 +632,7 @@ h3 {
 .visual-placeholder {
   background:
     linear-gradient(90deg, rgba(31, 92, 109, 0.06) 1px, transparent 1px),
-    linear-gradient(rgba(31, 92, 109, 0.06) 1px, transparent 1px),
-    #f6f7f3;
+    linear-gradient(rgba(31, 92, 109, 0.06) 1px, transparent 1px), #f6f7f3;
   background-size: 18px 18px;
   border-bottom: 1px solid var(--subtle);
   min-height: 178px;
@@ -627,6 +850,10 @@ h3 {
 
   .health-grid {
     grid-template-columns: 1fr;
+  }
+
+  .health-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .health-check:nth-child(odd) {
