@@ -17,50 +17,49 @@ const projects = [
     description:
       "Made this for my little sister hoping she'd enjoy it. She didn't. It has simple explanations, demos, and exercises for playing with LLMs and building small projects.",
     demonstrates:
-      "AI product design, education workflows, prompt evaluation, and secure per-user API key handling.",
+      "Flask app with chat, prompt scoring, code review, and DSA practice. You bring your own OpenAI key — the server never holds a shared one.",
     cta: "Ask about the demo",
-    visual: "dashboard",
+    visual: "chat",
   },
   {
     title: "Open Roles",
     description:
-      "A project for organizing and tracking open software engineering roles with a clean, practical workflow for job search research.",
+      "A scanner that pulls every open Forward Deployed Engineer role in the Bay Area into one list with direct apply links. Built it because checking the same job boards every day got old.",
     demonstrates:
-      "Product judgment, workflow design, structured role data, and practical job-search tooling.",
+      "Python scraping and aggregation. A small tool that solved a real problem I had.",
     cta: "View project",
-    visual: "flow",
+    visual: "roles",
     href: "https://github.com/FrazierAndrew/open-roles",
   },
   {
     title: "PhoneAgentV2",
     description:
-      "A phone-agent project focused on voice-oriented AI workflows, agent behavior, and practical interaction design.",
+      "An automated phone line for medical appointment intake. It collects patient info over a Twilio call — insurance, referral, address with validation — then schedules the appointment and emails a confirmation.",
     demonstrates:
-      "AI application design, agent workflows, product iteration, and user-facing automation.",
+      "Twilio voice flows wired to an LLM, plus the unglamorous parts: validation, scheduling, email.",
     cta: "View project",
-    visual: "dashboard",
+    visual: "phone",
     href: "https://github.com/FrazierAndrew/PhoneAgentV2",
   },
-];
-
-const articles = [
   {
-    title: "Designing Conservative Automated Remediation Systems",
-    excerpt:
-      "Why remediation tools should optimize for bounded action, explainability, and operator trust before autonomy.",
-    readTime: "6 min read",
+    title: "stem-lab",
+    description:
+      "Splits a finished track into six stems with Demucs, runs signal analysis on each one, and generates a step-by-step plan for rebuilding the song in Ableton. How I learn how my favorite tracks were made.",
+    demonstrates:
+      "Audio DSP with librosa — tempo and key detection, onsets, section mapping — turned into JSON plans and human-readable guides.",
+    cta: "View project",
+    visual: "stems",
+    href: "https://github.com/FrazierAndrew/stem-lab",
   },
   {
-    title: "Rollout Metrics Matter More Than Launch Metrics",
-    excerpt:
-      "A practical look at detecting regressions, measuring blast radius, and deciding when a release is actually healthy.",
-    readTime: "5 min read",
-  },
-  {
-    title: "Structured Memory for LLM Applications",
-    excerpt:
-      "How durable memory can stay useful by preserving evidence, scope, freshness, and clear retrieval boundaries.",
-    readTime: "7 min read",
+    title: "song-recommender",
+    description:
+      "Ranks songs I haven't heard by how much I'll probably like them. Builds a taste profile from the audio signature of songs I already like, then scores everything else against it. Fully offline — no APIs.",
+    demonstrates:
+      "53-dimensional feature extraction (tempo, timbre, pitch, energy) and weighted-consensus cosine ranking in plain numpy.",
+    cta: "View project",
+    visual: "ranks",
+    href: "https://github.com/FrazierAndrew/song-recommender",
   },
 ];
 
@@ -85,7 +84,7 @@ function App() {
             ),
           )
         : Math.max(1, Math.round(performance.now()));
-      const requiredSectionIds = ["work", "writing", "about"];
+      const requiredSectionIds = ["work", "about"];
       const readySections = requiredSectionIds.filter((id) =>
         document.getElementById(id),
       ).length;
@@ -125,7 +124,6 @@ function App() {
         </a>
         <nav className="nav-links" aria-label="Primary navigation">
           <a href="#work">Work</a>
-          <a href="#writing">Writing</a>
           <a href="#about">About</a>
           <a href="/Andrew_Resume.pdf">Resume</a>
         </nav>
@@ -140,13 +138,14 @@ function App() {
             <h1>Andrew Frazier</h1>
             <p className="positioning">
               Spent 3 years teaching data structures and algorithms to thousands
-              of students, then 5 years building cloud database infrastructure
-              at Microsoft. Hoping what's next involves good people and happy
-              customers.
+              of students at UW, then almost 3 years building Azure Database for
+              PostgreSQL at Microsoft. Hoping what's next involves good people
+              and happy customers.
             </p>
             <p className="supporting">
-              I build systems that diagnose problems, monitor complex services,
-              and turn messy operational knowledge into usable software.
+              I like building the systems behind the scenes: incident
+              diagnosis, fleet telemetry, rollout monitoring — and lately,
+              making LLM products actually remember things.
             </p>
             <div className="hero-actions" aria-label="Profile links">
               {links.map((link) => (
@@ -171,17 +170,17 @@ function App() {
         <section className="section section-bordered" id="work">
           <div className="section-heading">
             <p className="eyebrow">Selected Work</p>
-            <h2>Public-facing project themes</h2>
+            <h2>Things I've built</h2>
             <p>
-              Public projects and demos that reflect systems thinking, practical
-              product tooling, and AI application work.
+              Side projects, all real and all mine. The serious infrastructure
+              work lives in my resume — this is what I build on my own time.
             </p>
           </div>
 
           <div className="project-grid">
             {projects.map((project) => (
               <article className="project-card" key={project.title}>
-                <VisualPlaceholder type={project.visual} />
+                <ProjectVisual type={project.visual} />
                 <div className="card-body">
                   <h3>{project.title}</h3>
                   <p>{project.description}</p>
@@ -203,44 +202,25 @@ function App() {
           </div>
         </section>
 
-        <section
-          className="section writing-section section-bordered"
-          id="writing"
-        >
-          <div className="section-heading compact">
-            <p className="eyebrow">Technical Writing</p>
-            <h2>Short notes on engineering judgment</h2>
-          </div>
-
-          <div className="writing-list">
-            {articles.map((article) => (
-              <article className="writing-card" key={article.title}>
-                <div>
-                  <h3>{article.title}</h3>
-                  <p>{article.excerpt}</p>
-                </div>
-                <span>{article.readTime}</span>
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section className="section about-section section-bordered" id="about">
           <div className="section-heading compact">
             <p className="eyebrow">About</p>
-            <h2>Engineering close to real operational problems</h2>
+            <h2>The short version</h2>
           </div>
           <div className="about-copy">
             <p>
-              I am a software engineer with experience building cloud database
-              infrastructure, reliability tooling, telemetry systems, and AI
-              workflows. I care about systems that are observable, debuggable,
-              and useful under real operational pressure.
+              At Microsoft I worked on Azure Database for PostgreSQL: built an
+              incident diagnosis and remediation platform, caught a scaling
+              flaw in Autonomous Tuning before it shipped, and built the
+              telemetry that watched 100,000+ servers. Most recently I was the
+              4th engineer at TrainLoop (YC W25), rebuilding an LLM product's
+              memory system. Before all that, three years as a TA teaching
+              data structures at UW.
             </p>
             <p>
-              I am interested in backend, product engineering, and
-              forward-deployed engineering roles where engineering work connects
-              closely to users, operations, or customer problems.
+              I'm looking for backend, product, or forward-deployed engineering
+              work — ideally close enough to customers that I can see whether
+              what I built actually helped.
             </p>
           </div>
         </section>
@@ -249,10 +229,7 @@ function App() {
       <footer className="footer" id="contact">
         <div>
           <strong>Andrew Frazier</strong>
-          <p>
-            Backend systems, reliability tooling, telemetry, and AI
-            applications.
-          </p>
+          <p>Backend engineer in San Francisco.</p>
         </div>
         <nav aria-label="Contact links">
           {links.map((link) => (
@@ -357,6 +334,16 @@ function WebsiteHealthDashboard({ health }) {
         : stats.clicks > 2
           ? "clicky"
           : mood;
+  const moodEmoji =
+    {
+      invested: "🤩",
+      "resume-curious": "👀",
+      clicky: "⚡",
+      delighted: "😄",
+      impressed: "😎",
+      curious: "🤔",
+    }[moodLabel] || "🤔";
+  const confettiColors = ["#1f5c6d", "#c2562f", "#e3b341", "#7fb069"];
   const sparkleBars = Array.from({ length: 10 }, (_, index) => {
     const base = 24 + ((stats.seconds + index * 13 + stats.clicks * 7) % 58);
     return Math.min(94, base + stats.confetti * 4);
@@ -385,6 +372,20 @@ function WebsiteHealthDashboard({ health }) {
       className={`hero-panel health-dashboard mood-${moodLabel}`}
       aria-label="Interactive website mood dashboard"
     >
+      {stats.confetti > 0 && (
+        <div className="confetti" key={stats.confetti} aria-hidden="true">
+          {Array.from({ length: 16 }, (_, i) => (
+            <i
+              key={i}
+              style={{
+                left: `${(i * 13 + 4) % 100}%`,
+                background: confettiColors[i % confettiColors.length],
+                animationDelay: `${(i % 6) * 0.07}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
       <div className="panel-header">
         <span>visitor vibe check</span>
         <span>{health.status === "healthy" ? moodLabel : "offline"}</span>
@@ -401,7 +402,7 @@ function WebsiteHealthDashboard({ health }) {
           style={{ "--pulse": `${curiosity}%` }}
           aria-hidden="true"
         >
-          <span>{curiosity > 82 ? "!" : "?"}</span>
+          <span className="orb-face">{moodEmoji}</span>
         </div>
       </div>
 
@@ -458,22 +459,119 @@ function WebsiteHealthDashboard({ health }) {
   );
 }
 
-function VisualPlaceholder({ type }) {
+function ProjectVisual({ type }) {
+  if (type === "chat") {
+    return (
+      <div className="visual chat" aria-hidden="true">
+        <div className="chat-bar">
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="bubble user">explain APIs like I'm 12</div>
+        <div className="bubble ai">
+          ok — imagine a restaurant where the waiter is the API…
+        </div>
+        <div className="chat-input">
+          <span className="caret" />
+          type a prompt
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "roles") {
+    return (
+      <div className="visual roles" aria-hidden="true">
+        <div className="role-row">
+          <span className="role-dot" />
+          <span className="role-title">Forward Deployed Eng</span>
+          <span className="role-apply">↗</span>
+        </div>
+        <div className="role-row">
+          <span className="role-dot" />
+          <span className="role-title">FDE · AI Platform</span>
+          <span className="role-apply">↗</span>
+        </div>
+        <div className="role-row faded">
+          <span className="role-dot" />
+          <span className="role-title">Solutions Engineer</span>
+          <span className="role-apply">↗</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "stems") {
+    const wave = [38, 62, 88, 54, 72, 95, 60, 80, 46, 68, 90, 52];
+    return (
+      <div className="visual stems" aria-hidden="true">
+        <div className="stem-row full">
+          <span className="stem-label">track</span>
+          <div className="stem-wave">
+            {wave.map((h, i) => (
+              <span key={i} style={{ height: `${h}%` }} />
+            ))}
+          </div>
+        </div>
+        <div className="stem-arrow">↓ demucs</div>
+        {[
+          { name: "drums", cls: "drums", bars: [80, 30, 85, 25, 90, 35] },
+          { name: "bass", cls: "bass", bars: [55, 70, 60, 75, 50, 65] },
+          { name: "vocals", cls: "vocals", bars: [20, 60, 90, 70, 40, 25] },
+        ].map((s) => (
+          <div className={`stem-row ${s.cls}`} key={s.name}>
+            <span className="stem-label">{s.name}</span>
+            <div className="stem-wave">
+              {s.bars.map((h, i) => (
+                <span key={i} style={{ height: `${h}%` }} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (type === "ranks") {
+    return (
+      <div className="visual ranks" aria-hidden="true">
+        {[
+          { name: "unheard_07.mp3", score: 0.93 },
+          { name: "unheard_19.mp3", score: 0.88 },
+          { name: "unheard_02.mp3", score: 0.61 },
+        ].map((t) => (
+          <div className="rank-row" key={t.name}>
+            <span className="rank-name">{t.name}</span>
+            <span className="rank-bar">
+              <i style={{ width: `${t.score * 100}%` }} />
+            </span>
+            <span className="rank-score">{t.score.toFixed(2)}</span>
+          </div>
+        ))}
+        <div className="rank-caption">ranked by taste-profile similarity</div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`visual-placeholder ${type}`} aria-hidden="true">
-      <div className="visual-label">
-        {type === "dashboard"
-          ? "Dashboard view"
-          : type === "pipeline"
-            ? "Evaluation pipeline"
-            : "System flow"}
+    <div className="visual phone" aria-hidden="true">
+      <div className="call-pill">
+        <span className="call-dot" />
+        incoming call
       </div>
-      <div className="visual-content">
+      <div className="waveform">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
         <span />
         <span />
         <span />
         <span />
       </div>
+      <div className="call-steps">✓ name ✓ insurance ✓ address · scheduling…</div>
     </div>
   );
 }
