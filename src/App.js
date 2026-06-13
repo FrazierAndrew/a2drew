@@ -457,6 +457,7 @@ function FacebookView({ onClose }) {
     ["Cookies", fp.cookies],
     ["Came from", fp.referrer],
     ["Do Not Track", fp.dnt],
+    ["Canvas fingerprint", fp.canvasId ? `#${fp.canvasId} (unique to you)` : "…"],
   ];
 
   return (
@@ -469,6 +470,11 @@ function FacebookView({ onClose }) {
       </header>
 
       <div className="fb-body">
+        <p className="fb-disclaimer" style={{ margin: "0 0 14px" }}>
+          Relax, none of this is stored. Was curious to see what websites can
+          track without having to ask permission... this is what I've found so
+          far. Need to understand cookies (i'm sure that will be horrifying)
+        </p>
         <h2 className="fb-greet">
           Hi{" "}
           <span className="fb-name">Andrew</span> 👋 — here's what we picked up.
