@@ -54,11 +54,116 @@
     padding: 6px 12px;
   }
   hr { border: none; border-top: 1px solid #808080; }
+
+  /* ---- cassette tape player (sample of the recreation) ---- */
+  .tape-player {
+    background: linear-gradient(#1c1c74, #000060);
+    border: 3px ridge #c0c0c0;
+    border-radius: 6px;
+    color: #ffffff;
+    margin: 0 0 22px;
+    padding: 12px 14px 11px;
+  }
+  .tape-tag {
+    background: #ffff00;
+    color: #000080;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 9px;
+    padding: 1px 7px;
+    text-transform: uppercase;
+  }
+  .tape-deck {
+    align-items: center;
+    background: #111111;
+    border: 2px inset #555555;
+    border-radius: 4px;
+    display: flex;
+    gap: 13px;
+    padding: 11px 14px;
+  }
+  .reel {
+    background:
+      radial-gradient(circle, #1a1a1a 0 23%, transparent 23%),
+      repeating-conic-gradient(#c8c8c8 0 11deg, #2a2a2a 11deg 22deg);
+    border: 2px solid #8a8a8a;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    height: 44px;
+    position: relative;
+    width: 44px;
+  }
+  .reel::after {
+    background: #ffff00;
+    border-radius: 50%;
+    content: "";
+    height: 9px;
+    left: 50%;
+    margin: -4.5px 0 0 -4.5px;
+    position: absolute;
+    top: 50%;
+    width: 9px;
+  }
+  .tape-player.playing .reel { animation: reel-spin 1.5s linear infinite; }
+  @keyframes reel-spin { to { transform: rotate(360deg); } }
+  .tape-window { flex: 1 1 auto; min-width: 0; }
+  .tape-title {
+    color: #ffff00;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tape-sub { color: #00ffff; font-size: 10px; margin-top: 2px; }
+  .tape-progress {
+    background: #000000;
+    border: 1px solid #555555;
+    height: 6px;
+    margin-top: 7px;
+    overflow: hidden;
+  }
+  .tape-progress i { background: #00ff66; display: block; height: 100%; width: 0; }
+  .tape-controls { align-items: center; display: flex; gap: 11px; margin-top: 10px; }
+  .tape-controls button {
+    background: #d4d0c8;
+    border: 2px outset #ffffff;
+    color: #000080;
+    cursor: pointer;
+    font-family: Verdana, Geneva, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 16px;
+  }
+  .tape-controls button:active { border-style: inset; }
+  .tape-time { color: #00ffff; font-family: "Courier New", monospace; font-size: 12px; }
 </style>
 </head>
 <body>
   <div class="topbar">📼 stem-lab &mdash; example rebuild plan &nbsp;·&nbsp; <a href="/">&laquo; back to a2drew.com</a></div>
-  <div class="wrap" id="content">Loading plan&hellip;</div>
+  <div class="wrap">
+    <div class="tape-player" id="tape">
+      <span class="tape-tag">▶ now playing &middot; stem recreation</span>
+      <div class="tape-deck">
+        <div class="reel"></div>
+        <div class="tape-window">
+          <div class="tape-title">Hosini &mdash; Dimma (Extended Mix)</div>
+          <div class="tape-sub">rebuilt from 6 stems &middot; 30-second sample</div>
+          <div class="tape-progress"><i id="tapeBar"></i></div>
+        </div>
+        <div class="reel"></div>
+      </div>
+      <div class="tape-controls">
+        <button id="tapePlay" type="button" aria-label="Play sample">&#9654; PLAY</button>
+        <span class="tape-time" id="tapeTime">0:00 / 0:30</span>
+      </div>
+      <audio id="tapeAudio" src="dimma-sample.mp3" preload="metadata"></audio>
+    </div>
+    <div id="content">Loading plan&hellip;</div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     fetch("example-plan.md")
@@ -69,6 +174,37 @@
       .catch(function () {
         document.getElementById("content").textContent = "Could not load the plan.";
       });
+
+    (function () {
+      var audio = document.getElementById("tapeAudio");
+      var btn = document.getElementById("tapePlay");
+      var bar = document.getElementById("tapeBar");
+      var time = document.getElementById("tapeTime");
+      var player = document.getElementById("tape");
+      function fmt(s) {
+        s = Math.floor(s || 0);
+        return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+      }
+      btn.addEventListener("click", function () {
+        if (audio.paused) { audio.play(); } else { audio.pause(); }
+      });
+      audio.addEventListener("play", function () {
+        player.classList.add("playing");
+        btn.innerHTML = "&#10074;&#10074; PAUSE";
+      });
+      audio.addEventListener("pause", function () {
+        player.classList.remove("playing");
+        btn.innerHTML = "&#9654; PLAY";
+      });
+      audio.addEventListener("timeupdate", function () {
+        var d = audio.duration || 30;
+        bar.style.width = (audio.currentTime / d * 100) + "%";
+        time.textContent = fmt(audio.currentTime) + " / " + fmt(d);
+      });
+      audio.addEventListener("ended", function () {
+        bar.style.width = "0%";
+      });
+    })();
   </script>
 </body>
 </html>
