@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>stem-lab — example rebuild plan</title>
+<style>
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-family: Verdana, Geneva, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .topbar {
+    background: #000080;
+    color: #ffff00;
+    font-weight: bold;
+    padding: 8px 16px;
+  }
+  .topbar a { color: #00ffff; }
+  .wrap {
+    background: #ffffcc;
+    border: 2px solid #808080;
+    margin: 16px auto;
+    max-width: 820px;
+    padding: 20px 26px;
+  }
+  h1 { font-size: 24px; border-bottom: 3px double #808080; padding-bottom: 6px; }
+  h2 { font-size: 19px; background: #ccccff; padding: 4px 8px; margin-top: 26px; }
+  h3 { font-size: 15px; color: #000080; }
+  a { color: #0000cc; }
+  code {
+    background: #eeeeee;
+    border: 1px solid #cccccc;
+    font-family: "Courier New", monospace;
+    padding: 0 3px;
+  }
+  pre {
+    background: #000080;
+    color: #00ff66;
+    overflow-x: auto;
+    padding: 10px;
+  }
+  pre code { background: none; border: none; color: inherit; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #808080; padding: 4px 8px; text-align: left; }
+  th { background: #ccffcc; }
+  blockquote {
+    background: #ffcccc;
+    border-left: 4px solid #cc0000;
+    margin: 10px 0;
+    padding: 6px 12px;
+  }
+  hr { border: none; border-top: 1px solid #808080; }
+</style>
+</head>
+<body>
+  <div class="topbar">📼 stem-lab &mdash; example rebuild plan &nbsp;·&nbsp; <a href="/">&laquo; back to a2drew.com</a></div>
+  <div class="wrap" id="content">Loading plan&hellip;</div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    fetch("example-plan.md")
+      .then(function (r) { return r.text(); })
+      .then(function (md) {
+        document.getElementById("content").innerHTML = marked.parse(md);
+      })
+      .catch(function () {
+        document.getElementById("content").textContent = "Could not load the plan.";
+      });
+  </script>
+</body>
+</html>
