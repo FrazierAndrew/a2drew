@@ -793,8 +793,7 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
               <p>
               </p>
               <p>
-                As of June 2026, I'm now living in San Francisco, for fun I'm learning how to produce music in Ableton, and most importantly navigating life with my new partner,
-                Claude Opus 4.8. 
+                As of June 2026, I'm now living in San Francisco, for fun I'm attempting to learn how to produce music in Ableton, though most of my time is spent figuring out how to navigate life with my new partner, Claude Opus 4.8.
               </p>
               <p>
                 For employment purposes, see the{" "}
