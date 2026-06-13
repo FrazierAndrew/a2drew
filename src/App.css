@@ -583,6 +583,66 @@ hr {
   display: none;
 }
 
+/* green Spotify square next to the lights toggle */
+.spotify-square {
+  align-items: center;
+  background: #1db954;
+  border: 2px outset #1ed760;
+  color: #ffffff;
+  display: inline-flex;
+  font: bold 12px Verdana, Geneva, Arial, sans-serif;
+  height: 30px;
+  justify-content: center;
+  letter-spacing: 0.3px;
+  padding: 0 12px;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+
+.spotify-square:hover {
+  background: #1ed760;
+}
+
+.spotify-square:active {
+  border-style: inset;
+}
+
+/* a little turtle waddling along the header/body separator */
+.header-rule {
+  position: relative;
+}
+
+.turtle-walker {
+  animation: turtle-walk 16s linear infinite;
+  left: 0;
+  margin-top: -10px;
+  position: absolute;
+  top: 0;
+  transform: scaleX(-1);
+}
+
+.turtle {
+  animation: turtle-bob 0.5s ease-in-out infinite;
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+}
+
+@keyframes turtle-walk {
+  from { left: -24px; }
+  to { left: 100%; }
+}
+
+@keyframes turtle-bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-3px) rotate(3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turtle-walker { animation-duration: 40s; }
+  .turtle { animation: none; }
+}
+
 /* ---- two-column body: 2/5 left, 3/5 right, rule between ---- */
 
 .body-columns {

@@ -477,8 +477,7 @@ function FacebookView({ onClose }) {
           far. Need to understand cookies (i'm sure that will be horrifying)
         </p>
         <h2 className="fb-greet">
-          Hi{" "}
-          <span className="fb-name">Andrew</span> 👋 — here's what we picked up.
+          Hi 👋 — here's what we picked up.
           <br />
           <span className="fb-sub">
             We didn't ask. We never do. The scary part is none of this needed a
@@ -770,8 +769,22 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
               {isDark ? "lights on" : "lights off"}
             </span>
           </button>
+          <a
+            className="spotify-square"
+            href="https://open.spotify.com/user/jyx13p87vxwwgqnmwn5fzmrd7?si=3093f4e0743849f2"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Andrew on Spotify"
+          >
+            spotify
+          </a>
         </p>
-        <hr />
+        <div className="header-rule">
+          <hr />
+          <span className="turtle-walker" aria-hidden="true">
+            <span className="turtle">🐢</span>
+          </span>
+        </div>
 
         <div className="body-columns" id="work">
           <div className="left-col">
@@ -780,7 +793,7 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
               <p>
               </p>
               <p>
-                As of June 2026, I'm now living in San Francisco, for fun I'm learning how to produce music in Ableton, and most importantly learning how to navigate life with my new partner, 
+                As of June 2026, I'm now living in San Francisco, for fun I'm learning how to produce music in Ableton, and most importantly navigating life with my new partner,
                 Claude Opus 4.8. 
               </p>
               <p>
