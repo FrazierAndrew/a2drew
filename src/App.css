@@ -854,6 +854,33 @@ hr {
   border-style: inset;
 }
 
+.plan-button {
+  background: #000080;
+  color: #ffff00;
+  letter-spacing: 1px;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
+.plan-button:hover {
+  background: #ffff00;
+  color: #000080;
+}
+
+.plan-star {
+  animation: blink-tag 1s steps(2, start) infinite;
+  color: #00ffff;
+  margin: 0 5px;
+}
+
+.plan-button .plan-star:last-child {
+  animation-delay: 0.5s;
+}
+
+.plan-button:hover .plan-star {
+  color: #ff00ff;
+}
+
 /* three across, natural heights — deliberately not a tidy grid */
 .project-masonry {
   column-count: 3;

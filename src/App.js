@@ -18,6 +18,7 @@ const projects = [
     cta: "View project",
     visual: "stems",
     href: "https://github.com/FrazierAndrew/stem-lab",
+    planHref: "/example-plan.html",
     flag: "Personal favorite",
   },
   {
@@ -834,6 +835,18 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
                     >
                       {project.cta}
                     </a>
+                    {project.planHref && (
+                      <a
+                        className="cta-button plan-button"
+                        href={project.planHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span className="plan-star" aria-hidden="true">★</span>
+                        example plan
+                        <span className="plan-star" aria-hidden="true">★</span>
+                      </a>
+                    )}
                   </p>
                 </div>
               ))}
