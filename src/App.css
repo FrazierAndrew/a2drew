@@ -123,6 +123,20 @@ hr {
   width: 80px;
 }
 
+.name-row {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.name-photo {
+  border: 2px ridge #c0c0c0;
+  flex: 0 0 auto;
+  height: 58px;
+  object-fit: cover;
+  width: 58px;
+}
+
 /* deliberately hideous bucket-list button */
 .bucket-btn {
   background: repeating-linear-gradient(
@@ -277,6 +291,243 @@ hr {
   margin-top: 28px;
   position: static;
   transform: rotate(-2deg);
+}
+
+/* ---- Facebook banner button ---- */
+.fb-btn {
+  background: #3b5998;
+  border: 2px outset #6d84b4;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: bold;
+  height: 80px;
+  letter-spacing: -1px;
+  margin-right: 6px;
+  padding: 0 12px;
+  vertical-align: top;
+  width: 96px;
+}
+
+.fb-btn:hover {
+  background: #4a69ad;
+}
+
+.fb-btn:active {
+  border-style: inset;
+}
+
+/* ---- Facebook surveillance dashboard (full page) ---- */
+.fb-view {
+  background: #e9ebee;
+  color: #1d2129;
+  font-family: Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.fb-bar {
+  align-items: center;
+  background: #3b5998;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 18px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.fb-logo {
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
+.fb-close {
+  background: #ffffff;
+  border: 1px solid #29487d;
+  border-radius: 2px;
+  color: #3b5998;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px 12px;
+}
+
+.fb-body {
+  margin: 0 auto;
+  max-width: 940px;
+  padding: 18px;
+}
+
+.fb-greet {
+  font-size: 22px;
+  font-weight: normal;
+  line-height: 1.3;
+  margin: 6px 0 16px;
+}
+
+.fb-name {
+  color: #3b5998;
+  font-weight: bold;
+}
+
+.fb-sub {
+  color: #606770;
+  font-size: 14px;
+}
+
+.fb-counter {
+  background: #3b5998;
+  border-radius: 4px;
+  color: #ffffff;
+  margin-bottom: 18px;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.fb-counter-num {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 46px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.fb-counter-label {
+  font-size: 13px;
+  margin-top: 6px;
+  opacity: 0.85;
+}
+
+.fb-section {
+  background: #ffffff;
+  border: 1px solid #dddfe2;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+}
+
+.fb-h3 {
+  border-bottom: 1px solid #dddfe2;
+  font-size: 15px;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+}
+
+.fb-grid {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.fb-fact {
+  display: flex;
+  flex-direction: column;
+  padding: 7px 4px;
+}
+
+.fb-fact-k {
+  color: #90949c;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.fb-fact-v {
+  color: #1d2129;
+  font-size: 14px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.fb-live-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.fb-stat {
+  background: #f5f6f7;
+  border: 1px solid #dddfe2;
+  border-radius: 3px;
+  padding: 10px;
+  text-align: center;
+}
+
+.fb-stat strong {
+  color: #3b5998;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 22px;
+}
+
+.fb-stat span {
+  color: #606770;
+  font-size: 11px;
+}
+
+.fb-selection {
+  background: #fff8dc;
+  border: 1px solid #e2d9a0;
+  border-radius: 3px;
+  font-size: 13px;
+  margin: 12px 0 0;
+  padding: 8px 10px;
+}
+
+.fb-feed {
+  background: #1d2129;
+  border-radius: 3px;
+  color: #4bd76b;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+  margin-top: 12px;
+  padding: 10px 12px;
+}
+
+.fb-feed-title {
+  color: #90949c;
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.fb-feed p {
+  align-items: center;
+  display: flex;
+  gap: 7px;
+  margin: 0 0 3px;
+}
+
+.fb-feed i {
+  background: #4bd76b;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  height: 6px;
+  width: 6px;
+}
+
+.fb-disclaimer {
+  color: #606770;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 18px 0 0;
+  text-align: center;
+}
+
+.fb-leave {
+  background: #42b72a;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 8px;
+  padding: 7px 16px;
 }
 
 .tagline {
@@ -1313,6 +1564,47 @@ html[data-theme="dark"] .health-dashboard {
 
   .project-masonry {
     column-count: 1;
+  }
+
+  /* ---- mobile header cluster: stop the now-playing / bucket / photo
+     block from being absolutely positioned over the title ---- */
+  body {
+    overflow-x: hidden;
+  }
+
+  .retro-main {
+    padding-top: 12px;
+  }
+
+  .corner-photos {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 14px;
+  }
+
+  /* now-playing widget goes fluid instead of a fixed 232px */
+  .winamp {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-right: 0;
+  }
+
+  /* the left-pointing "#1 song" callout juts 83px off-screen on phones */
+  .np-callout {
+    display: none;
+  }
+
+  .bucket-btn {
+    margin-right: 0;
+  }
+
+  .corner-photos img {
+    margin-left: 0;
   }
 }
 

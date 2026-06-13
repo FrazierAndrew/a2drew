@@ -210,6 +210,20 @@ const bucketList = [
   { text: "Go in a hot air balloon", done: false },
   { text: "Crocodile in the wild", done: false },
   { text: "Perform at EDC Las Vegas", done: false },
+  { text: "Do one of those indoor skydiving things", done: false },
+  { text: "Almost get trapped in quicksand", done: false },
+  { text: "Do a silent meditation retreat (10 days, no talking)", done: false },
+  { text: "Learn one song on piano well enough to play it at a bar", done: false },
+  { text: "Rent a car with no GPS in a foreign country and just drive for a week", done: false },
+  { text: "Go to Burning Man", done: false },
+  { text: "See lava", done: true },
+  { text: "Run a marathon", done: false },
+  { text: "Swan dive into every ocean", done: false },
+  { text: "Amalfi coast", done: true },
+  { text: "Sketchy Half Dome hike", done: false },
+  { text: "3 days / 2 nights solo camping", done: false },
+  { text: "Learn one impressive magic trick", done: false },
+  { text: "Witness someone claim citizens arrest", done: false },
 ];
 
 function BucketListView({ onRevert }) {
@@ -241,6 +255,315 @@ function BucketListView({ onRevert }) {
   );
 }
 
+function detectBrowser(ua) {
+  if (/Edg\//.test(ua)) return "Edge";
+  if (/OPR\//.test(ua)) return "Opera";
+  if (/Chrome\//.test(ua)) return "Chrome";
+  if (/Firefox\//.test(ua)) return "Firefox";
+  if (/Safari\//.test(ua)) return "Safari";
+  return "some browser";
+}
+
+function FacebookView({ onClose }) {
+  const [fp, setFp] = useState({});
+  const [live, setLive] = useState({
+    mouseDist: 0,
+    clicks: 0,
+    scrollDepth: 0,
+    idle: 0,
+    seconds: 0,
+    blurs: 0,
+    copies: 0,
+    keys: 0,
+    selection: "",
+    events: ["you opened this page", "we started watching immediately"],
+  });
+
+  // --- the silent fingerprint: everything the browser hands over, no prompt ---
+  useEffect(() => {
+    const gpu = (() => {
+      try {
+        const c = document.createElement("canvas");
+        const g =
+          c.getContext("webgl") || c.getContext("experimental-webgl");
+        const dbg = g && g.getExtension("WEBGL_debug_renderer_info");
+        return dbg
+          ? g.getParameter(dbg.UNMASKED_RENDERER_WEBGL)
+          : "hidden";
+      } catch (e) {
+        return "hidden";
+      }
+    })();
+    const canvasId = (() => {
+      try {
+        const c = document.createElement("canvas");
+        const x = c.getContext("2d");
+        x.textBaseline = "top";
+        x.font = "14px Arial";
+        x.fillStyle = "#f60";
+        x.fillRect(2, 2, 120, 20);
+        x.fillStyle = "#069";
+        x.fillText("a2drew.com 😈", 4, 4);
+        const data = c.toDataURL();
+        let h = 0;
+        for (let i = 0; i < data.length; i++) {
+          h = (h * 31 + data.charCodeAt(i)) >>> 0;
+        }
+        return h.toString(16).padStart(8, "0");
+      } catch (e) {
+        return "blocked";
+      }
+    })();
+    const nav = navigator;
+    const conn = nav.connection || {};
+    setFp({
+      canvasId,
+      os: nav.platform || "unknown",
+      browser: detectBrowser(nav.userAgent),
+      cores: nav.hardwareConcurrency || "?",
+      mem: nav.deviceMemory ? `${nav.deviceMemory} GB` : "hidden",
+      gpu,
+      screen: `${window.screen.width} × ${window.screen.height}`,
+      viewport: `${window.innerWidth} × ${window.innerHeight}`,
+      depth: `${window.screen.colorDepth}-bit color`,
+      dpr: `${window.devicePixelRatio}×`,
+      lang: (nav.languages || [nav.language]).join(", "),
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      localtime: new Date().toLocaleTimeString(),
+      touch: "ontouchstart" in window ? "touchscreen" : "mouse & keyboard",
+      dnt:
+        nav.doNotTrack === "1"
+          ? "ON — and we ignored it 😈"
+          : "not set",
+      referrer: document.referrer || "typed us in directly",
+      net: conn.effectiveType
+        ? `${conn.effectiveType}${
+            conn.downlink ? ` · ~${conn.downlink} Mbps` : ""
+          }`
+        : "hidden",
+      scheme: window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark mode"
+        : "light mode",
+      cookies: nav.cookieEnabled ? "enabled" : "blocked",
+      battery: "reading…",
+    });
+    if (nav.getBattery) {
+      nav.getBattery().then((b) =>
+        setFp((prev) => ({
+          ...prev,
+          battery: `${Math.round(b.level * 100)}% ${
+            b.charging ? "⚡ charging" : "🔋 unplugged"
+          }`,
+        })),
+      );
+    } else {
+      setFp((prev) => ({ ...prev, battery: "hidden" }));
+    }
+  }, []);
+
+  // --- live behavioral surveillance ---
+  useEffect(() => {
+    let lastX = null;
+    let lastY = null;
+    const log = (msg) =>
+      setLive((s) => ({ ...s, events: [msg, ...s.events].slice(0, 7) }));
+
+    const onMove = (e) => {
+      if (lastX !== null) {
+        const d = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+        setLive((s) => ({ ...s, mouseDist: s.mouseDist + d, idle: 0 }));
+      }
+      lastX = e.clientX;
+      lastY = e.clientY;
+    };
+    const onClick = (e) => {
+      setLive((s) => ({ ...s, clicks: s.clicks + 1, idle: 0 }));
+      log(`🖱 click at (${e.clientX}, ${e.clientY})`);
+    };
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.round((window.scrollY / max) * 100) : 0;
+      setLive((s) => ({ ...s, scrollDepth: Math.max(s.scrollDepth, pct), idle: 0 }));
+    };
+    const onBlur = () => {
+      setLive((s) => ({ ...s, blurs: s.blurs + 1 }));
+      log("👁 you switched tabs — where'd you go?");
+    };
+    const onCopy = () => {
+      setLive((s) => ({ ...s, copies: s.copies + 1 }));
+      log("📋 you copied something");
+    };
+    const onKey = () => setLive((s) => ({ ...s, keys: s.keys + 1, idle: 0 }));
+    const onSelect = () => {
+      const t = (window.getSelection() || "").toString().trim().slice(0, 48);
+      if (t) setLive((s) => ({ ...s, selection: t }));
+    };
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("click", onClick);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("blur", onBlur);
+    document.addEventListener("copy", onCopy);
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("selectionchange", onSelect);
+    const timer = window.setInterval(
+      () => setLive((s) => ({ ...s, seconds: s.seconds + 1, idle: s.idle + 1 })),
+      1000,
+    );
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("click", onClick);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("blur", onBlur);
+      document.removeEventListener("copy", onCopy);
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("selectionchange", onSelect);
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  const harvestedBytes =
+    1024 +
+    live.seconds * 137 +
+    Math.round(live.mouseDist) * 3 +
+    live.clicks * 512 +
+    live.keys * 88 +
+    live.scrollDepth * 64 +
+    live.blurs * 256 +
+    live.copies * 400;
+  const harvested =
+    harvestedBytes > 1024 * 1024
+      ? `${(harvestedBytes / 1024 / 1024).toFixed(2)} MB`
+      : `${(harvestedBytes / 1024).toFixed(1)} KB`;
+
+  const knows = [
+    ["Device", fp.os],
+    ["Browser", fp.browser],
+    ["CPU cores", fp.cores],
+    ["RAM", fp.mem],
+    ["Graphics card", fp.gpu],
+    ["Screen", fp.screen],
+    ["Window size", fp.viewport],
+    ["Pixel density", fp.dpr],
+    ["Color depth", fp.depth],
+    ["Battery", fp.battery],
+    ["Languages", fp.lang],
+    ["Timezone", fp.tz],
+    ["Your local time", fp.localtime],
+    ["Input", fp.touch],
+    ["Connection", fp.net],
+    ["Theme", fp.scheme],
+    ["Cookies", fp.cookies],
+    ["Came from", fp.referrer],
+    ["Do Not Track", fp.dnt],
+  ];
+
+  return (
+    <div className="fb-view">
+      <header className="fb-bar">
+        <span className="fb-logo">facebook</span>
+        <button className="fb-close" onClick={onClose} type="button">
+          delete my data ✕
+        </button>
+      </header>
+
+      <div className="fb-body">
+        <h2 className="fb-greet">
+          Hi{" "}
+          <span className="fb-name">Andrew</span> 👋 — here's what we picked up.
+          <br />
+          <span className="fb-sub">
+            We didn't ask. We never do. The scary part is none of this needed a
+            permission popup.
+          </span>
+        </h2>
+
+        <div className="fb-counter">
+          <div className="fb-counter-num">{harvested}</div>
+          <div className="fb-counter-label">
+            data harvested this session &middot; growing every second you stay
+          </div>
+        </div>
+
+        <section className="fb-section">
+          <h3 className="fb-h3">📇 What your browser told us (no consent required)</h3>
+          <div className="fb-grid">
+            {knows.map(([k, v]) => (
+              <div className="fb-fact" key={k}>
+                <span className="fb-fact-k">{k}</span>
+                <span className="fb-fact-v">{v ?? "…"}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="fb-section">
+          <h3 className="fb-h3">👁 Live — we are watching you right now</h3>
+          <div className="fb-live-grid">
+            <div className="fb-stat">
+              <strong>{Math.round(live.mouseDist).toLocaleString()} px</strong>
+              <span>mouse travelled</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.clicks}</strong>
+              <span>clicks logged</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.keys}</strong>
+              <span>keys pressed</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.scrollDepth}%</strong>
+              <span>max scroll depth</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.blurs}</strong>
+              <span>times you looked away</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.seconds}s</strong>
+              <span>time on page</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.idle}s</strong>
+              <span>idle right now</span>
+            </div>
+            <div className="fb-stat">
+              <strong>{live.copies}</strong>
+              <span>things you copied</span>
+            </div>
+          </div>
+          {live.selection && (
+            <p className="fb-selection">
+              📝 we even saw what you highlighted: &ldquo;{live.selection}&rdquo;
+            </p>
+          )}
+          <div className="fb-feed">
+            <span className="fb-feed-title">live activity log</span>
+            {live.events.map((ev, i) => (
+              <p key={`${ev}-${i}`}>
+                <i />
+                {ev}
+              </p>
+            ))}
+          </div>
+        </section>
+
+        <p className="fb-disclaimer">
+          Relax — this is a joke. It is 100% client-side: nothing here is
+          stored, sent, or kept. That's the whole point. A real tracker would
+          have shipped every line above to its servers before you finished
+          reading this sentence.{" "}
+          <button className="fb-leave" onClick={onClose} type="button">
+            get me out of here
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [theme, setTheme] = useState(() => {
     if (typeof window === "undefined") return "light";
@@ -248,6 +571,7 @@ function App() {
   });
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [bucketOpen, setBucketOpen] = useState(false);
+  const [facebookOpen, setFacebookOpen] = useState(false);
   const [username, setUsername] = useState(() => {
     if (typeof window === "undefined") return "";
     return window.localStorage.getItem("site-username") || "";
@@ -332,6 +656,10 @@ function App() {
     return <BucketListView onRevert={() => setBucketOpen(false)} />;
   }
 
+  if (facebookOpen) {
+    return <FacebookView onClose={() => setFacebookOpen(false)} />;
+  }
+
   return (
     <div className="site-shell">
       <aside className="retro-sidebar">
@@ -374,15 +702,24 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
         <div className="corner-photos">
           <NowPlaying />
           <button
+            className="fb-btn"
+            onClick={() => setFacebookOpen(true)}
+            type="button"
+          >
+            Facebook
+          </button>
+          <button
             className="bucket-btn"
             onClick={() => setBucketOpen(true)}
             type="button"
           >
             bucket&nbsp;list
           </button>
-          <img src="/headshot.jpg" alt="Andrew Frazier" />
         </div>
-        <h1>Andrew Frazier's Home Page</h1>
+        <div className="name-row">
+          <img className="name-photo" src="/headshot.jpg" alt="Andrew Frazier" />
+          <h1>Andrew Frazier's Home Page</h1>
+        </div>
         <p className="hero-actions" aria-label="Profile links">
           {links.map((link) => (
             <a href={link.href} key={link.label}>
