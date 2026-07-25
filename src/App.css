@@ -1,7 +1,6 @@
 /* ============================================================
-   a2drew.com — deliberately early-internet styling (grelf.net
-   homage). Pastel blocks, Verdana, default-blue links, beveled
-   buttons. Yes, it is supposed to look like this.
+   a2drew.com — a tidier early-internet personal homepage.
+   Verdana, blue links, small utilitarian panels, a little weirdness.
    ============================================================ */
 
 * {
@@ -9,8 +8,8 @@
 }
 
 body {
-  background: #ffffff;
-  color: #000000;
+  background: #f7f4ee;
+  color: #18212a;
   font-family: Verdana, Geneva, Arial, sans-serif;
   font-size: 13px;
   line-height: 1.4;
@@ -18,7 +17,7 @@ body {
 }
 
 a {
-  color: #0000cc;
+  color: #1e4f86;
   text-decoration: underline;
 }
 
@@ -27,7 +26,7 @@ a:visited {
 }
 
 a:hover {
-  color: #cc0000;
+  color: #a84832;
 }
 
 h1 {
@@ -66,8 +65,9 @@ hr {
 }
 
 .retro-sidebar {
-  border-right: 1px solid #c0c0c0;
-  flex: 0 0 92px;
+  background: #e9eef0;
+  border-right: 1px solid #aebbc0;
+  flex: 0 0 118px;
   font-size: 12px;
   padding: 10px 6px;
   text-align: center;
@@ -79,21 +79,23 @@ hr {
 }
 
 .vertical-name {
-  color: #0b080b;
-  font-family:  "Comic Sans MS", "Bradley Hand", fantasy, cursive;
-  font-size: 20px;
-  font-weight: bolder;
-  margin: 38px 30px;
+  color: #24596a;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  margin: 38px 12px;
   text-align: center;
 }
 
 
 .stack-trace {
-  color: #cc0000;
+  color: #9d6355;
   font-family: "Courier New", Courier, monospace;
-  font-size: 7px;
+  font-size: 6px;
   line-height: 1.35;
   margin: 12px 0 0;
+  opacity: 0.72;
   overflow-wrap: break-word;
   text-align: left;
   white-space: pre-wrap;
@@ -102,68 +104,91 @@ hr {
 
 .retro-main {
   flex: 1;
+  margin: 0 auto;
+  max-width: 1440px;
   min-width: 0;
-  padding: 8px 12px 20px;
+  padding: 18px 24px 28px;
   position: relative;
 }
 
-.corner-photos {
-  position: absolute;
-  right: 12px;
-  top: 8px;
-  z-index: 2;
+.site-header {
+  align-items: center;
+  border-bottom: 1px solid #aebbc0;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  padding: 0 0 15px;
 }
 
-.corner-photos img {
-  border: 2px ridge #c0c0c0;
-  height: 80px;
-  margin-left: 6px;
-  object-fit: cover;
-  vertical-align: top;
-  width: 80px;
-}
-
-.name-row {
+.site-identity {
   align-items: center;
   display: flex;
-  gap: 10px;
+  gap: 13px;
+  min-width: 0;
 }
 
 .name-photo {
-  border: 2px ridge #c0c0c0;
+  border: 1px solid #456570;
+  box-shadow: 3px 3px 0 #d5e0de;
   flex: 0 0 auto;
-  height: 58px;
+  height: 64px;
   object-fit: cover;
-  width: 58px;
+  width: 64px;
+}
+
+.site-kicker,
+.section-label {
+  color: #47636c;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+}
+
+.site-identity h1 {
+  color: #183c4a;
+  font-size: 25px;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.site-location {
+  color: #5a676d;
+  font-size: 11px;
+  margin: 2px 0 0;
+}
+
+.site-utilities {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.utility-buttons {
+  display: grid;
+  gap: 5px;
 }
 
 /* deliberately hideous bucket-list button */
 .bucket-btn {
-  background: repeating-linear-gradient(
-    45deg,
-    #ff00ff,
-    #ff00ff 6px,
-    #00ff00 6px,
-    #00ff00 12px
-  );
-  border: 3px outset #ffff00;
-  color: #ffff00;
+  background: #e7e2cb;
+  border: 1px outset #f8f2d9;
+  color: #4c4326;
   cursor: pointer;
-  font-family: "Comic Sans MS", "Chalkboard SE", cursive;
-  font-size: 15px;
-  font-weight: bold;
-  height: 80px;
-  margin-right: 6px;
-  padding: 0 10px;
-  text-shadow: 2px 2px 0 #0000ff, -1px -1px 0 #ff0000;
-  transform: rotate(-4deg);
-  vertical-align: top;
-  width: 90px;
+  font: bold 10px Verdana, Geneva, Arial, sans-serif;
+  margin: 0;
+  padding: 5px 8px;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 .bucket-btn:hover {
-  animation: bucket-wiggle 0.3s linear infinite;
-  color: #00ffff;
+  animation: none;
+  background: #f3edcf;
+  color: #2b5260;
 }
 
 .bucket-btn:active {
@@ -295,23 +320,21 @@ hr {
 
 /* ---- Facebook banner button ---- */
 .fb-btn {
-  background: #3b5998;
-  border: 2px outset #6d84b4;
-  color: #ffffff;
+  background: #dce8ed;
+  border: 1px outset #f7ffff;
+  color: #1f5365;
   cursor: pointer;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 22px;
-  font-weight: bold;
-  height: 80px;
-  letter-spacing: -1px;
-  margin-right: 6px;
-  padding: 0 12px;
-  vertical-align: top;
-  width: 96px;
+  font: bold 10px Verdana, Geneva, Arial, sans-serif;
+  letter-spacing: 0;
+  margin: 0;
+  padding: 5px 8px;
+  text-align: left;
+  text-transform: uppercase;
+  width: auto;
 }
 
 .fb-btn:hover {
-  background: #4a69ad;
+  background: #edf5f4;
 }
 
 .fb-btn:active {
@@ -594,19 +617,34 @@ hr {
   margin: 0 0 8px;
 }
 
-.hero-actions {
+.hero-actions,
+.site-nav {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 8px;
+  gap: 6px;
+  margin: 10px 0 8px;
+}
+
+.site-nav > a {
+  background: #fbfaf5;
+  border: 1px solid #c8d1cf;
+  color: #1e4f86;
+  font-size: 11px;
+  padding: 4px 7px;
+  text-decoration: none;
+}
+
+.site-nav > a:hover {
+  background: #e5efed;
+  color: #a84832;
 }
 
 /* ---- login + theme controls (kept functional, restyled retro) ---- */
 
 .login-shell {
   display: inline-block;
-  margin: 0 8px;
+  margin: 0 2px;
 }
 
 .login-trigger,
@@ -645,15 +683,15 @@ hr {
 /* green Spotify square next to the lights toggle */
 .spotify-square {
   align-items: center;
-  background: #1db954;
-  border: 2px outset #1ed760;
+  background: #3c8d63;
+  border: 1px outset #b8d6c5;
   color: #ffffff;
   display: inline-flex;
-  font: bold 12px Verdana, Geneva, Arial, sans-serif;
-  height: 30px;
+  font: bold 10px Verdana, Geneva, Arial, sans-serif;
+  height: 26px;
   justify-content: center;
   letter-spacing: 0.3px;
-  padding: 0 12px;
+  padding: 0 9px;
   text-decoration: none;
   text-transform: lowercase;
 }
@@ -668,7 +706,12 @@ hr {
 
 /* a little turtle waddling along the header/body separator */
 .header-rule {
+  margin-top: 2px;
   position: relative;
+}
+
+.header-rule hr {
+  border-top-color: #aebbc0;
 }
 
 .turtle-walker {
@@ -716,14 +759,24 @@ hr {
 }
 
 .right-col {
-  border-left: 1px solid #808080;
+  border-left: 1px solid #aebbc0;
   flex: 0 0 60%;
   max-width: 60%;
   padding-left: 10px;
 }
 
 .hello-block {
+  border-left: 4px solid #ba7057;
+  box-shadow: 2px 2px 0 #e0d8c8;
+  padding: 15px;
   width: 100%;
+}
+
+.intro-lede {
+  color: #264956;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.5;
 }
 
 .resume-block {
@@ -758,32 +811,22 @@ hr {
 /* ---- Winamp-style now playing (compact, banner) ---- */
 
 .winamp {
-  background: #ff0e0e;
-  border: 2px outset #6a6a82;
+  background: #27343c;
+  border: 1px solid #526a74;
+  box-shadow: 2px 2px 0 #ccd8d7;
   display: inline-block;
   font-family: "Courier New", Courier, monospace;
-  margin-right: 6px;
+  margin: 0;
+  min-height: 0;
   position: relative;
   text-align: left;
   vertical-align: top;
-  width: 232px;
-  height: 120px; /* Smaller height */
-  min-height: 0; /* Ensure it can shrink */
+  width: 204px;
 }
 
 /* deliberately ugly "this is my #1 song" callout */
 .np-callout {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  left: -83px; /* places it to the left of the box */
-  top: 0;
-  width: 83px; /* 20% smaller than original 104px */
-  height: 10%;  /* reduce height by 10% */
-  z-index: 4;
-  transform: scale(0.8, 0.72); /* 20% smaller width, 28% smaller height (0.8*0.9 = 0.72 total height reduction) */
-  transform-origin: left top;
+  display: none;
 }
 
 .np-arrow {
@@ -1060,7 +1103,7 @@ hr {
 }
 
 .c0 {
-  background: #ffcccc;
+  background: #f1e8d7;
 }
 
 .c1 {
@@ -1719,34 +1762,32 @@ html[data-theme="dark"] .health-dashboard {
   }
 
   .retro-main {
-    padding-top: 12px;
+    padding: 14px;
   }
 
-  .corner-photos {
-    position: static;
-    display: flex;
-    flex-wrap: wrap;
+  .site-header {
     align-items: flex-start;
-    justify-content: center;
-    gap: 10px;
-    margin: 0 0 14px;
+    flex-direction: column;
+    gap: 14px;
   }
 
-  /* now-playing widget goes fluid instead of a fixed 232px */
-  .winamp {
+  .site-utilities {
+    align-items: stretch;
     width: 100%;
+  }
+
+  .winamp {
+    flex: 1;
     max-width: 300px;
-    height: auto;
-    margin-right: 0;
+    width: auto;
   }
 
-  /* the left-pointing "#1 song" callout juts 83px off-screen on phones */
-  .np-callout {
-    display: none;
+  .utility-buttons {
+    flex: 0 0 auto;
   }
 
-  .bucket-btn {
-    margin-right: 0;
+  .site-nav {
+    gap: 5px;
   }
 
   .corner-photos img {

@@ -758,11 +758,6 @@ function App() {
         <a href="#work">Projects</a>
         <a href="/Andrew_Resume.pdf">Resume</a>
         <a href="#bottom">Page bottom</a>
-        <div></div>
-        <h1></h1>
-        <h1></h1>
-        <h1></h1>
-
         <div className="vertical-name" aria-hidden="true">
           {"nostalgic exception:".split("").map((ch, i) => (
             <span
@@ -790,31 +785,39 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
       </aside>
 
       <main className="retro-main" id="top">
-        <div className="corner-photos">
-          <NowPlaying />
-          <button
-            className="fb-btn"
-            onClick={() => setFacebookOpen(true)}
-            type="button"
-          >
-            Facebook
-          </button>
-          <button
-            className="bucket-btn"
-            onClick={() => setBucketOpen(true)}
-            type="button"
-          >
-            bucket&nbsp;list
-          </button>
-        </div>
-        <div className="name-row">
-          <img className="name-photo" src="/headshot.jpg" alt="Andrew Frazier" />
-          <h1>Andrew Frazier's Home Page</h1>
-        </div>
-        <p className="hero-actions" aria-label="Profile links">
+        <header className="site-header">
+          <div className="site-identity">
+            <img className="name-photo" src="/headshot.jpg" alt="Andrew Frazier" />
+            <div>
+              <p className="site-kicker">a2drew.com / personal home page</p>
+              <h1>Andrew Frazier</h1>
+              <p className="site-location">San Francisco · software, music, small experiments</p>
+            </div>
+          </div>
+          <div className="site-utilities">
+            <NowPlaying />
+            <div className="utility-buttons">
+              <button
+                className="utility-button fb-btn"
+                onClick={() => setFacebookOpen(true)}
+                type="button"
+              >
+                privacy lab
+              </button>
+              <button
+                className="utility-button bucket-btn"
+                onClick={() => setBucketOpen(true)}
+                type="button"
+              >
+                bucket list
+              </button>
+            </div>
+          </div>
+        </header>
+        <nav className="site-nav" aria-label="Profile links">
           {links.map((link) => (
             <a href={link.href} key={link.label}>
-              [{link.label}]
+              {link.label}
             </a>
           ))}
           <span className="login-shell">
@@ -863,7 +866,7 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
           >
             spotify
           </a>
-        </p>
+        </nav>
         <div className="header-rule">
           <hr />
           <span className="turtle-walker" aria-hidden="true">
@@ -874,15 +877,16 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
         <div className="body-columns" id="work">
           <div className="left-col">
             <div className="block c0 hello-block">
-              <h3>Welcome!</h3>
-              <p>
+              <p className="section-label">01 / hello, internet</p>
+              <h3>A more useful kind of home page.</h3>
+              <p className="intro-lede">
+                I live in San Francisco, build software, and am learning how songs are made in Ableton.
               </p>
               <p>
-                As of June 2026, I'm now living in San Francisco. For fun I'm attempting to learn how to produce music in Ableton, though most of my time is spent figuring out how to navigate life with my new partner, Claude Opus 4.8.
+                This is the part portfolio, part notebook version of me: real projects, useful Mac shortcuts, and a few experiments that are more fun than a normal résumé site would allow.
               </p>
               <p>
-                For employment purposes, see the{" "}
-                <a href="/Andrew_Resume.pdf">RESUME</a> below. Scroll further for life alterting Mac shortcuts and apps. 
+                Here for work? Start with the <a href="/Andrew_Resume.pdf">résumé</a>.
               </p>
             </div>
 
