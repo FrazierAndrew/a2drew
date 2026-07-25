@@ -267,6 +267,7 @@ function detectBrowser(ua) {
 
 function FacebookView({ onClose }) {
   const [fp, setFp] = useState({});
+  const [permissions, setPermissions] = useState([]);
   const [live, setLive] = useState({
     mouseDist: 0,
     clicks: 0,
@@ -360,6 +361,70 @@ function FacebookView({ onClose }) {
     } else {
       setFp((prev) => ({ ...prev, battery: "hidden" }));
     }
+  }, []);
+
+  useEffect(() => {
+    const permissionNames = [
+      ["Location", "geolocation"],
+      ["Notifications", "notifications"],
+      ["Camera", "camera"],
+      ["Microphone", "microphone"],
+      ["Clipboard read", "clipboard-read"],
+      ["Clipboard write", "clipboard-write"],
+      ["Background sync", "background-sync"],
+      ["Persistent storage", "persistent-storage"],
+      ["MIDI devices", "midi"],
+    ];
+
+    if (!navigator.permissions || !navigator.permissions.query) {
+      setPermissions(
+        permissionNames.map(([label, name]) => ({
+          label,
+          name,
+          state: "unsupported",
+        })),
+      );
+      return;
+    }
+
+    let cancelled = false;
+    const statuses = [];
+    const syncStatuses = () => {
+      if (!cancelled) {
+        setPermissions((current) =>
+          current.map((item) => {
+            const status = statuses.find((s) => s.name === item.name);
+            return status ? { ...item, state: status.state } : item;
+          }),
+        );
+      }
+    };
+
+    Promise.all(
+      permissionNames.map(([label, name]) =>
+        navigator.permissions
+          .query({ name })
+          .then((status) => {
+            statuses.push(status);
+            if (status.addEventListener) {
+              status.addEventListener("change", syncStatuses);
+            }
+            return { label, name, state: status.state };
+          })
+          .catch(() => ({ label, name, state: "unsupported" })),
+      ),
+    ).then((results) => {
+      if (!cancelled) setPermissions(results);
+    });
+
+    return () => {
+      cancelled = true;
+      statuses.forEach((status) => {
+        if (status.removeEventListener) {
+          status.removeEventListener("change", syncStatuses);
+        }
+      });
+    };
   }, []);
 
   // --- live behavioral surveillance ---
@@ -491,6 +556,26 @@ function FacebookView({ onClose }) {
             data harvested this session &middot; growing every second you stay
           </div>
         </div>
+
+        <section className="fb-section">
+          <h3 className="fb-h3">Permission scoreboard (queried without popups)</h3>
+          <div className="fb-permissions">
+            {permissions.map((permission) => (
+              <div
+                className={`fb-permission permission-${permission.state}`}
+                key={permission.name}
+              >
+                <span className="fb-permission-name">{permission.label}</span>
+                <span className="fb-permission-state">{permission.state}</span>
+              </div>
+            ))}
+          </div>
+          <p className="fb-permission-note">
+            These are permission states the browser will report to a page. We
+            are only asking the browser what the status is, not requesting
+            access.
+          </p>
+        </section>
 
         <section className="fb-section">
           <h3 className="fb-h3">📇 What your browser told us (no consent required)</h3>

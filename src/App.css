@@ -441,6 +441,65 @@ hr {
   overflow-wrap: anywhere;
 }
 
+.fb-permissions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.fb-permission {
+  align-items: center;
+  background: #f5f6f7;
+  border: 1px solid #dddfe2;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 8px 10px;
+}
+
+.fb-permission-name {
+  color: #1d2129;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.fb-permission-state {
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  padding: 4px 7px;
+  text-transform: uppercase;
+}
+
+.permission-granted .fb-permission-state {
+  background: #e5f5e0;
+  color: #2f7d32;
+}
+
+.permission-denied .fb-permission-state {
+  background: #fde7e9;
+  color: #b00020;
+}
+
+.permission-prompt .fb-permission-state {
+  background: #fff4ce;
+  color: #8a5a00;
+}
+
+.permission-unsupported .fb-permission-state {
+  background: #e4e6eb;
+  color: #606770;
+}
+
+.fb-permission-note {
+  color: #606770;
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 10px 0 0;
+}
+
 .fb-live-grid {
   display: grid;
   gap: 10px;
