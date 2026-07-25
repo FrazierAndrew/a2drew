@@ -754,34 +754,30 @@ function App() {
   return (
     <div className="site-shell">
       <aside className="retro-sidebar">
-        <a href="#top">Page top</a>
-        <a href="#work">Projects</a>
-        <a href="/Andrew_Resume.pdf">Resume</a>
-        <a href="#bottom">Page bottom</a>
-        <div className="vertical-name" aria-hidden="true">
-          {"nostalgic exception:".split("").map((ch, i) => (
-            <span
-              key={i}
-              style={{
-                transform: `translateX(${Math.sin(i * 0.8) * 5}px) rotate(${
-                  Math.sin(i * 0.8) * 8
-                }deg)`,
-              }}
-            >
-              {ch}
-            </span>
-          ))}
-        </div>
-        <pre className="stack-trace" aria-hidden="true">{`Exception in thread "main"
+        <a className="sidebar-brand" href="#top" aria-label="Andrew Frazier home">
+          <span>a2</span>
+          <span>drew</span>
+        </a>
+        <nav className="sidebar-nav" aria-label="Page sections">
+          <a href="#top">Home</a>
+          <a href="#work">Projects</a>
+          <a href="/Andrew_Resume.pdf">Résumé</a>
+          <a href="#bottom">Contact</a>
+        </nav>
+        <p className="sidebar-note">a small corner of the internet</p>
+        <details className="sidebar-easter-egg">
+          <summary>system status</summary>
+          <pre className="stack-trace">{`Exception in thread "main"
 java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
-\tat java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
-\tat java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
-\tat java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
-\tat java.base/java.util.Objects.checkIndex(Objects.java:385)
-\tat java.base/java.util.ArrayList.get(ArrayList.java:427)
-\tat com.a2drew.site.Sidebar.render(Sidebar.java:42)
-\tat com.a2drew.site.HomePage.draw(HomePage.java:88)
-\tat com.a2drew.site.HomePage.main(HomePage.java:17)`}</pre>
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
+	at java.base/java.util.Objects.checkIndex(Objects.java:385)
+	at java.base/java.util.ArrayList.get(ArrayList.java:427)
+	at com.a2drew.site.Sidebar.render(Sidebar.java:42)
+	at com.a2drew.site.HomePage.draw(HomePage.java:88)
+	at com.a2drew.site.HomePage.main(HomePage.java:17)`}</pre>
+        </details>
       </aside>
 
       <main className="retro-main" id="top">
@@ -912,13 +908,17 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
           </div>
 
           <div className="right-col">
-            <h2 className="col-title">Projects</h2>
+            <div className="project-heading">
+              <p className="section-label">02 / selected work</p>
+              <h2 className="col-title">Projects & experiments</h2>
+            </div>
             <div className="project-masonry">
               {projects.map((project, index) => (
                 <div
-                  className={`block c${(index % 5) + 1}`}
+                  className={`block project-card c${(index % 5) + 1}`}
                   key={project.title}
                 >
+                  <p className="project-index">project / {String(index + 1).padStart(2, "0")}</p>
                   <h3>
                     {project.title}
                     {project.flag && (
