@@ -192,7 +192,7 @@ const powerTools = [
 const bucketList = [
   { text: "See a penguin in the wild", done: true },
   { text: "Standing backflip", done: true },
-  { text: "Produce an EDM song from scratch", done: false },
+  { text: "Produce a song from scratch", done: false },
   { text: "Swim with a blue whale", done: false },
   { text: "Gainer off a diving board", done: true },
   { text: "Go to that one lookout from Tenet in Italy", done: false },
@@ -201,21 +201,21 @@ const bucketList = [
   { text: "Not have a smartphone", done: false },
   { text: "Live in California", done: true },
   { text: "Surf in Cape Town", done: false },
-  { text: "Get wine drunk in Mumbai", done: false },
+  { text: "Something in Dubai", done: false },
   { text: "Go to a 3 Michelin star restaurant", done: false },
   { text: "Amazon Rainforest", done: true },
   { text: "Multi-day trek in Alaska", done: false },
   { text: "Look at El Capitan for 15 mins in silence", done: true },
-  { text: "See hyenas in the wild", done: false },
-  { text: "Salt flats in Utah", done: false },
+  { text: "Wild hyenas", done: false },
+  { text: "Go viral on social media", done: true },
   { text: "Go in a hot air balloon", done: false },
-  { text: "Crocodile in the wild", done: false },
+  { text: "Crocodile in the wild", done: true },
   { text: "Perform at EDC Las Vegas", done: false },
   { text: "Do one of those indoor skydiving things", done: false },
-  { text: "Almost get trapped in quicksand", done: false },
-  { text: "Do a silent meditation retreat (10 days, no talking)", done: false },
-  { text: "Learn one song on piano well enough to play it at a bar", done: false },
-  { text: "Rent a car with no GPS in a foreign country and just drive for a week", done: false },
+  { text: "Encounter quicksand", done: false },
+  { text: "Meet Jack Dorsey", done: false },
+  { text: "1 impressive piano piece", done: false },
+  { text: "Hold my breath for 3 minutes", done: true },
   { text: "Go to Burning Man", done: false },
   { text: "See lava", done: true },
   { text: "Run a marathon", done: false },
@@ -238,14 +238,12 @@ function BucketListView({ onRevert }) {
         <span className="blinky">Andrew's Bucket List</span>
       </h1>
       <p className="bucket-key">
-        {doneCount} / {bucketList.length} done · items stamped{" "}
-        <span className="done-stamp">DID IT!</span> are in the can
+        {doneCount} / {bucketList.length} complete · crossed out means done
       </p>
       <ol className="bucket-ol">
         {bucketList.map((item) => (
           <li className={item.done ? "done" : ""} key={item.text}>
             <span className="bucket-text">{item.text}</span>
-            {item.done && <span className="done-stamp">DID IT!</span>}
           </li>
         ))}
       </ol>

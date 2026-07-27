@@ -266,12 +266,12 @@ hr {
   background:
     repeating-linear-gradient(
       0deg,
-      #000033,
-      #000033 2px,
-      #000044 2px,
-      #000044 4px
+      #173b34,
+      #173b34 2px,
+      #1c463c 2px,
+      #1c463c 4px
     );
-  color: #00ff66;
+  color: #a6d8bd;
   font-family: "Comic Sans MS", "Chalkboard SE", cursive;
   min-height: 100vh;
   padding: 40px 16px 80px;
@@ -279,12 +279,12 @@ hr {
 }
 
 .bucket-title {
-  color: #ffff00;
+  color: #f29a63;
   font-family: "Comic Sans MS", "Chalkboard SE", cursive;
   font-size: 38px;
   letter-spacing: 1px;
   margin: 0 0 6px;
-  text-shadow: 3px 3px 0 #ff00ff, 6px 6px 0 #00ffff;
+  text-shadow: 3px 3px 0 #2c6b59, 6px 6px 0 #193d35;
 }
 
 .blinky {
@@ -298,7 +298,7 @@ hr {
 }
 
 .bucket-key {
-  color: #ffffff;
+  color: #d7eadb;
   font-size: 13px;
   margin: 0 0 24px;
 }
@@ -318,36 +318,19 @@ hr {
 }
 
 .bucket-ol .bucket-text {
-  color: #00ff66;
+  color: #a6d8bd;
 }
 
 .bucket-ol li.done .bucket-text {
-  color: #888888;
+  color: #f1a67a;
   text-decoration: line-through;
-}
-
-/* completed = a retro green "DID IT!" stamp, slapped on crooked */
-.done-stamp {
-  background: #008000;
-  border: 2px solid #00ff00;
-  color: #ffff00;
-  display: inline-block;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-left: 8px;
-  padding: 1px 6px;
-  transform: rotate(-7deg);
-}
-
-.bucket-key .done-stamp {
-  margin: 0 2px;
-  transform: rotate(-3deg);
+  text-decoration-color: #f6c184;
+  text-decoration-thickness: 2px;
 }
 
 .revert-btn {
-  background: #ff0000;
-  border: 3px outset #ff8888;
+  background: #d96f3f;
+  border: 3px outset #f3ad7f;
   color: #ffffff;
   cursor: pointer;
   font-family: "Comic Sans MS", "Chalkboard SE", cursive;
