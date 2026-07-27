@@ -194,6 +194,7 @@ const bucketList = [
   { text: "Standing backflip", done: true },
   { text: "Produce a song from scratch", done: false },
   { text: "Swim with a blue whale", done: false },
+  { text: "Alkatraz swim", done: false },
   { text: "Gainer off a diving board", done: true },
   { text: "Go to that one lookout from Tenet in Italy", done: false },
   { text: "Touch Antarctica", done: false },
@@ -225,27 +226,46 @@ const bucketList = [
   { text: "3 days / 2 nights solo camping", done: false },
   { text: "Learn one impressive magic trick", done: false },
   { text: "Witness someone claim citizens arrest", done: false },
+  {
+    text: "Learn the Squirrel Suit",
+    done: false,
+    requiresAllOthers: true,
+  },
 ];
 
 function BucketListView({ onRevert }) {
   const doneCount = bucketList.filter((item) => item.done).length;
+  const allOtherBucketItemsComplete = bucketList
+    .filter((item) => !item.requiresAllOthers)
+    .every((item) => item.done);
+
   return (
     <div className="bucket-view">
       <button className="revert-btn" onClick={onRevert} type="button">
         &laquo; revert
       </button>
-      <h1 className="bucket-title">
-        <span className="blinky">Andrew's Bucket List</span>
-      </h1>
+      <h1 className="bucket-title">Andrew's Bucket List</h1>
       <p className="bucket-key">
         {doneCount} / {bucketList.length} complete · crossed out means done
       </p>
       <ol className="bucket-ol">
-        {bucketList.map((item) => (
-          <li className={item.done ? "done" : ""} key={item.text}>
-            <span className="bucket-text">{item.text}</span>
-          </li>
-        ))}
+        {bucketList.map((item) => {
+          const isLocked = item.requiresAllOthers && !allOtherBucketItemsComplete;
+          const itemClassName = ["bucket-item", item.done && "done", isLocked && "locked"]
+            .filter(Boolean)
+            .join(" ");
+
+          return (
+            <li className={itemClassName} key={item.text}>
+              <span className="bucket-text">{item.text}</span>
+              {isLocked && (
+                <span className="bucket-condition">
+                  (only when all others are complete)
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ol>
       <button className="revert-btn revert-btn-bottom" onClick={onRevert} type="button">
         &laquo; back to the website
