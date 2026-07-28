@@ -13,44 +13,41 @@ const links = [
 
 const projects = [
   {
+    title: "careplan-generator",
+    description:
+      "A FastAPI app for pharmacies that generates patient care plans. The backend separates validation, orchestration, SQLite persistence, PDF extraction, and LLM work, with duplicate-submission checks, CSV export, and unit plus API integration tests.",
+    cta: "View code",
+    href: "https://github.com/FrazierAndrew/careplan-generator",
+    flag: "Best backend sample",
+  },
+  {
+    title: "phone-agent",
+    description:
+      "A Twilio phone intake service for medical appointment scheduling. It collects patient, insurance, referral, complaint, address, and contact details; retries missing fields, validates addresses, schedules the appointment, and emails a confirmation.",
+    cta: "View code",
+    href: "https://github.com/FrazierAndrew/phone-agent",
+  },
+  {
+    title: "mp3-to-claude",
+    description:
+      "A CLI that converts audio libraries into structured JSON and CSV for downstream analysis. It extracts tempo, key and Camelot code, loudness, dynamics, timbre, chroma, spectral shape, and rough structure, with parallel processing and optional ratings.",
+    cta: "View code",
+    href: "https://github.com/FrazierAndrew/mp3-to-claude",
+  },
+  {
     title: "stem-lab",
-    description:"Built to learn how songs are made. It splits an mp3 audio track into six stems, then after some magic, generates a step-by-step how to rebuild the song in Ableton. Plans are far from perfect, but ramp up production knowledge quicker than anything else I've come across",
-    cta: "View project",
-    visual: "stems",
+    description:
+      "A Demucs and librosa pipeline that splits a finished track into six stems, measures BPM, key, sections, onsets, and spectral shape, then writes a machine-readable plan and step-by-step Ableton reconstruction guide.",
+    cta: "View code",
     href: "https://github.com/FrazierAndrew/stem-lab",
     planHref: "/example-plan.html",
-    flag: "Personal favorite",
   },
   {
-    title: "PhoneAgentV2",
+    title: "ll-mem",
     description:
-      "An automated phone line for medical appointment intake. It collects patient info over a Twilio call — insurance, referral, address with validation — then schedules the appointment and emails a confirmation.",
-    cta: "View project",
-    visual: "phone",
-    href: "https://github.com/FrazierAndrew/PhoneAgentV2",
-  },
-  {
-    title: "Intro to AI sandbox",
-    description:
-      "Spent a good amount of time making my little sister an intro to AI kit (she never opened it) ",
-    cta: "View project",
-    visual: "chat",
-    href: "https://frazierandrew.github.io/ai-sandbox-demo/",
-  },
-  {
-    title: "Open Roles",
-    description: "Crawler for SWE and FDE jobs in the bay ares. Use to figure out what tech stacks and skills are in demand.",
-    cta: "View project",
-    visual: "roles",
-    href: "https://github.com/FrazierAndrew/open-roles",
-  },
-  {
-    title: "song-recommender",
-    description:
-      "Ranks songs I haven't heard by how much I'll probably like them. Builds a taste profile from the audio signature of songs I already like, then scores everything else against it. Fully offline — no APIs.",
-    cta: "View project",
-    visual: "ranks",
-    href: "https://github.com/FrazierAndrew/song-recommender",
+      "A FastAPI and SQLite experiment in long-term chatbot memory. It captures signals from each conversation, clusters repeated patterns, updates a running portrait, and flags changes against the behavior established over time.",
+    cta: "View code",
+    href: "https://github.com/FrazierAndrew/ll-mem",
   },
 ];
 
@@ -283,23 +280,12 @@ function detectBrowser(ua) {
   return "some browser";
 }
 
-function FacebookView({ onClose }) {
+function PrivacyView({ health, onClose }) {
   const [fp, setFp] = useState({});
   const [permissions, setPermissions] = useState([]);
-  const [live, setLive] = useState({
-    mouseDist: 0,
-    clicks: 0,
-    scrollDepth: 0,
-    idle: 0,
-    seconds: 0,
-    blurs: 0,
-    copies: 0,
-    keys: 0,
-    selection: "",
-    events: ["you opened this page", "we started watching immediately"],
-  });
+  const [activeTab, setActiveTab] = useState("overview");
 
-  // --- the silent fingerprint: everything the browser hands over, no prompt ---
+  // Browser and device details available to ordinary client-side code.
   useEffect(() => {
     const gpu = (() => {
       try {
@@ -314,30 +300,9 @@ function FacebookView({ onClose }) {
         return "hidden";
       }
     })();
-    const canvasId = (() => {
-      try {
-        const c = document.createElement("canvas");
-        const x = c.getContext("2d");
-        x.textBaseline = "top";
-        x.font = "14px Arial";
-        x.fillStyle = "#f60";
-        x.fillRect(2, 2, 120, 20);
-        x.fillStyle = "#069";
-        x.fillText("a2drew.com 😈", 4, 4);
-        const data = c.toDataURL();
-        let h = 0;
-        for (let i = 0; i < data.length; i++) {
-          h = (h * 31 + data.charCodeAt(i)) >>> 0;
-        }
-        return h.toString(16).padStart(8, "0");
-      } catch (e) {
-        return "blocked";
-      }
-    })();
     const nav = navigator;
     const conn = nav.connection || {};
     setFp({
-      canvasId,
       os: nav.platform || "unknown",
       browser: detectBrowser(nav.userAgent),
       cores: nav.hardwareConcurrency || "?",
@@ -351,11 +316,8 @@ function FacebookView({ onClose }) {
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
       localtime: new Date().toLocaleTimeString(),
       touch: "ontouchstart" in window ? "touchscreen" : "mouse & keyboard",
-      dnt:
-        nav.doNotTrack === "1"
-          ? "ON — and we ignored it 😈"
-          : "not set",
-      referrer: document.referrer || "typed us in directly",
+      dnt: nav.doNotTrack === "1" ? "enabled" : "not enabled",
+      referrer: document.referrer || "none",
       net: conn.effectiveType
         ? `${conn.effectiveType}${
             conn.downlink ? ` · ~${conn.downlink} Mbps` : ""
@@ -365,14 +327,14 @@ function FacebookView({ onClose }) {
         ? "dark mode"
         : "light mode",
       cookies: nav.cookieEnabled ? "enabled" : "blocked",
-      battery: "reading…",
+      battery: "checking…",
     });
     if (nav.getBattery) {
       nav.getBattery().then((b) =>
         setFp((prev) => ({
           ...prev,
           battery: `${Math.round(b.level * 100)}% ${
-            b.charging ? "⚡ charging" : "🔋 unplugged"
+            b.charging ? "· charging" : "· not charging"
           }`,
         })),
       );
@@ -445,82 +407,6 @@ function FacebookView({ onClose }) {
     };
   }, []);
 
-  // --- live behavioral surveillance ---
-  useEffect(() => {
-    let lastX = null;
-    let lastY = null;
-    const log = (msg) =>
-      setLive((s) => ({ ...s, events: [msg, ...s.events].slice(0, 7) }));
-
-    const onMove = (e) => {
-      if (lastX !== null) {
-        const d = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-        setLive((s) => ({ ...s, mouseDist: s.mouseDist + d, idle: 0 }));
-      }
-      lastX = e.clientX;
-      lastY = e.clientY;
-    };
-    const onClick = (e) => {
-      setLive((s) => ({ ...s, clicks: s.clicks + 1, idle: 0 }));
-      log(`🖱 click at (${e.clientX}, ${e.clientY})`);
-    };
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = max > 0 ? Math.round((window.scrollY / max) * 100) : 0;
-      setLive((s) => ({ ...s, scrollDepth: Math.max(s.scrollDepth, pct), idle: 0 }));
-    };
-    const onBlur = () => {
-      setLive((s) => ({ ...s, blurs: s.blurs + 1 }));
-      log("👁 you switched tabs — where'd you go?");
-    };
-    const onCopy = () => {
-      setLive((s) => ({ ...s, copies: s.copies + 1 }));
-      log("📋 you copied something");
-    };
-    const onKey = () => setLive((s) => ({ ...s, keys: s.keys + 1, idle: 0 }));
-    const onSelect = () => {
-      const t = (window.getSelection() || "").toString().trim().slice(0, 48);
-      if (t) setLive((s) => ({ ...s, selection: t }));
-    };
-
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("click", onClick);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("blur", onBlur);
-    document.addEventListener("copy", onCopy);
-    window.addEventListener("keydown", onKey);
-    document.addEventListener("selectionchange", onSelect);
-    const timer = window.setInterval(
-      () => setLive((s) => ({ ...s, seconds: s.seconds + 1, idle: s.idle + 1 })),
-      1000,
-    );
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("click", onClick);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("blur", onBlur);
-      document.removeEventListener("copy", onCopy);
-      window.removeEventListener("keydown", onKey);
-      document.removeEventListener("selectionchange", onSelect);
-      window.clearInterval(timer);
-    };
-  }, []);
-
-  const harvestedBytes =
-    1024 +
-    live.seconds * 137 +
-    Math.round(live.mouseDist) * 3 +
-    live.clicks * 512 +
-    live.keys * 88 +
-    live.scrollDepth * 64 +
-    live.blurs * 256 +
-    live.copies * 400;
-  const harvested =
-    harvestedBytes > 1024 * 1024
-      ? `${(harvestedBytes / 1024 / 1024).toFixed(2)} MB`
-      : `${(harvestedBytes / 1024).toFixed(1)} KB`;
-
   const knows = [
     ["Device", fp.os],
     ["Browser", fp.browser],
@@ -539,136 +425,136 @@ function FacebookView({ onClose }) {
     ["Connection", fp.net],
     ["Theme", fp.scheme],
     ["Cookies", fp.cookies],
-    ["Came from", fp.referrer],
+    ["Referrer", fp.referrer],
     ["Do Not Track", fp.dnt],
-    ["Canvas fingerprint", fp.canvasId ? `#${fp.canvasId} (unique to you)` : "…"],
   ];
 
   return (
-    <div className="fb-view">
-      <header className="fb-bar">
-        <span className="fb-logo">facebook</span>
-        <button className="fb-close" onClick={onClose} type="button">
-          delete my data ✕
+    <div className="privacy-view">
+      <header className="privacy-bar">
+        <div className="privacy-bar-title">
+          <span className="privacy-kicker">browser privacy</span>
+          <strong>What a webpage can see</strong>
+        </div>
+        <button className="privacy-close" onClick={onClose} type="button">
+          back to site ✕
         </button>
       </header>
 
-      <div className="fb-body">
-        <p className="fb-disclaimer" style={{ margin: "0 0 14px" }}>
-          Relax, none of this is stored. Was curious to see what websites can
-          track without having to ask permission... this is what I've found so
-          far. Need to understand cookies (i'm sure that will be horrifying)
-        </p>
-        <h2 className="fb-greet">
-          Hi 👋 — here's what we picked up.
-          <br />
-          <span className="fb-sub">
-            We didn't ask. We never do. The scary part is none of this needed a
-            permission popup.
-          </span>
-        </h2>
+      <nav
+        className="privacy-tabs"
+        aria-label="Privacy page sections"
+      >
+        <button
+          aria-pressed={activeTab === "overview"}
+          className={activeTab === "overview" ? "active" : ""}
+          onClick={() => setActiveTab("overview")}
+          type="button"
+        >
+          browser info
+        </button>
+        <button
+          aria-pressed={activeTab === "tracking"}
+          className={activeTab === "tracking" ? "active" : ""}
+          onClick={() => setActiveTab("tracking")}
+          type="button"
+        >
+          tracking demo
+        </button>
+      </nav>
 
-        <div className="fb-counter">
-          <div className="fb-counter-num">{harvested}</div>
-          <div className="fb-counter-label">
-            data harvested this session &middot; growing every second you stay
-          </div>
-        </div>
-
-        <section className="fb-section">
-          <h3 className="fb-h3">Permission scoreboard (queried without popups)</h3>
-          <div className="fb-permissions">
-            {permissions.map((permission) => (
-              <div
-                className={`fb-permission permission-${permission.state}`}
-                key={permission.name}
-              >
-                <span className="fb-permission-name">{permission.label}</span>
-                <span className="fb-permission-state">{permission.state}</span>
-              </div>
-            ))}
-          </div>
-          <p className="fb-permission-note">
-            These are permission states the browser will report to a page. We
-            are only asking the browser what the status is, not requesting
-            access.
-          </p>
-        </section>
-
-        <section className="fb-section">
-          <h3 className="fb-h3">📇 What your browser told us (no consent required)</h3>
-          <div className="fb-grid">
-            {knows.map(([k, v]) => (
-              <div className="fb-fact" key={k}>
-                <span className="fb-fact-k">{k}</span>
-                <span className="fb-fact-v">{v ?? "…"}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="fb-section">
-          <h3 className="fb-h3">👁 Live — we are watching you right now</h3>
-          <div className="fb-live-grid">
-            <div className="fb-stat">
-              <strong>{Math.round(live.mouseDist).toLocaleString()} px</strong>
-              <span>mouse travelled</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.clicks}</strong>
-              <span>clicks logged</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.keys}</strong>
-              <span>keys pressed</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.scrollDepth}%</strong>
-              <span>max scroll depth</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.blurs}</strong>
-              <span>times you looked away</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.seconds}s</strong>
-              <span>time on page</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.idle}s</strong>
-              <span>idle right now</span>
-            </div>
-            <div className="fb-stat">
-              <strong>{live.copies}</strong>
-              <span>things you copied</span>
-            </div>
-          </div>
-          {live.selection && (
-            <p className="fb-selection">
-              📝 we even saw what you highlighted: &ldquo;{live.selection}&rdquo;
-            </p>
-          )}
-          <div className="fb-feed">
-            <span className="fb-feed-title">live activity log</span>
-            {live.events.map((ev, i) => (
-              <p key={`${ev}-${i}`}>
-                <i />
-                {ev}
+      <main className="privacy-body">
+        {activeTab === "overview" ? (
+          <>
+            <section className="privacy-intro">
+              <p className="privacy-kicker">informational demo</p>
+              <h1>What your browser shares with websites</h1>
+              <p>
+                This page shows ordinary browser and device details available
+                to a webpage, along with the current state of common
+                permissions. Nothing shown here is stored or sent anywhere.
               </p>
-            ))}
-          </div>
-        </section>
+            </section>
 
-        <p className="fb-disclaimer">
-          Relax — this is a joke. It is 100% client-side: nothing here is
-          stored, sent, or kept. That's the whole point. A real tracker would
-          have shipped every line above to its servers before you finished
-          reading this sentence.{" "}
-          <button className="fb-leave" onClick={onClose} type="button">
-            get me out of here
-          </button>
-        </p>
-      </div>
+            <aside className="privacy-note">
+              <strong>Permission status is not access.</strong> This page
+              checks the status reported by your browser. It does not request
+              your camera, microphone, location, notifications, or clipboard.
+            </aside>
+
+            <section className="privacy-section">
+              <h2>Permission status</h2>
+              <div className="privacy-permissions">
+                {permissions.map((permission) => (
+                  <div
+                    className={`privacy-permission permission-${permission.state}`}
+                    key={permission.name}
+                  >
+                    <span className="privacy-permission-name">
+                      {permission.label}
+                    </span>
+                    <span className="privacy-permission-state">
+                      {permission.state}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="privacy-permission-note">
+                “Prompt” means your browser would ask before granting access.
+                “Unsupported” means this browser does not report that status
+                here.
+              </p>
+            </section>
+
+            <section className="privacy-section">
+              <h2>Browser and device information</h2>
+              <div className="privacy-grid">
+                {knows.map(([k, v]) => (
+                  <div className="privacy-fact" key={k}>
+                    <span className="privacy-fact-k">{k}</span>
+                    <span className="privacy-fact-v">{v ?? "…"}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="privacy-explanation">
+                Sites use details like these for compatibility and responsive
+                layouts. When many signals are combined, they can also
+                contribute to browser fingerprinting.
+              </p>
+            </section>
+
+            <section className="privacy-section privacy-tips">
+              <h2>Simple privacy controls</h2>
+              <ul>
+                <li>Review permissions before granting access to a site.</li>
+                <li>
+                  Use your browser’s tracking-protection and cookie controls.
+                </li>
+                <li>Remove saved permissions for sites you no longer use.</li>
+              </ul>
+            </section>
+          </>
+        ) : (
+          <>
+            <section className="privacy-intro">
+              <p className="privacy-kicker">optional interactive demo</p>
+              <h1>Visitor vibe check</h1>
+              <p>
+                The original homepage widget lives here now. It counts clicks,
+                pointer movement, scrolling, and time only while this tab is
+                open. Nothing is stored or sent.
+              </p>
+            </section>
+            <section className="privacy-tracking-panel">
+              <WebsiteHealthDashboard health={health} />
+            </section>
+          </>
+        )}
+
+        <button className="privacy-leave" onClick={onClose} type="button">
+          back to the website
+        </button>
+      </main>
     </div>
   );
 }
@@ -680,7 +566,7 @@ function App() {
   });
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [bucketOpen, setBucketOpen] = useState(false);
-  const [facebookOpen, setFacebookOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [username, setUsername] = useState(() => {
     if (typeof window === "undefined") return "";
     return window.localStorage.getItem("site-username") || "";
@@ -765,8 +651,13 @@ function App() {
     return <BucketListView onRevert={() => setBucketOpen(false)} />;
   }
 
-  if (facebookOpen) {
-    return <FacebookView onClose={() => setFacebookOpen(false)} />;
+  if (privacyOpen) {
+    return (
+      <PrivacyView
+        health={health}
+        onClose={() => setPrivacyOpen(false)}
+      />
+    );
   }
 
   return (
@@ -779,6 +670,7 @@ function App() {
         <nav className="sidebar-nav" aria-label="Page sections">
           <a href="#top">Home</a>
           <a href="#work">Projects</a>
+          <a href="#music">Music</a>
           <a href="/Andrew_Resume.pdf">Résumé</a>
           <a href="#bottom">Contact</a>
         </nav>
@@ -799,6 +691,17 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
       </aside>
 
       <main className="retro-main" id="top">
+        <a
+          className="music-ad-bar"
+          href="https://open.spotify.com/artist/6Jsvb6OyiHyz2kCTWmnz9O?si=rLtCJy3VQ6WRZgzg3sL9rw"
+          id="music"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>advertisement</span>
+          <strong>Check out my Music on Spotify</strong>
+          <span aria-hidden="true">↗</span>
+        </a>
         <header className="site-header">
           <div className="site-identity">
             <img className="name-photo" src="/headshot.jpg" alt="Andrew Frazier" />
@@ -812,11 +715,11 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
             <NowPlaying />
             <div className="utility-buttons">
               <button
-                className="utility-button fb-btn"
-                onClick={() => setFacebookOpen(true)}
+                className="utility-button privacy-btn"
+                onClick={() => setPrivacyOpen(true)}
                 type="button"
               >
-                privacy lab
+                privacy info
               </button>
               <button
                 className="utility-button bucket-btn"
@@ -871,15 +774,6 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
               {isDark ? "lights on" : "lights off"}
             </span>
           </button>
-          <a
-            className="spotify-square"
-            href="https://open.spotify.com/user/jyx13p87vxwwgqnmwn5fzmrd7?si=3093f4e0743849f2"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Andrew on Spotify"
-          >
-            spotify
-          </a>
         </nav>
         <div className="header-rule">
           <hr />
@@ -892,9 +786,8 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
           <div className="left-col">
             <div className="block c0 hello-block">
               <p className="section-label">01 / hello, internet</p>
-              <h3>A more useful kind of home page.</h3>
               <p className="intro-lede">
-                I live in San Francisco, build software, and am learning how songs are made in Ableton.
+                I live in San Francisco, build software, and make music in Ableton.
               </p>
               <p>
                 This is the part portfolio, part notebook version of me: real projects, useful Mac shortcuts, and a few experiments that are more fun than a normal résumé site would allow.
@@ -928,23 +821,24 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
           <div className="right-col">
             <div className="project-heading">
               <p className="section-label">02 / selected work</p>
-              <h2 className="col-title">Projects & experiments</h2>
+              <h2 className="col-title">Selected GitHub work</h2>
             </div>
             <div className="project-masonry">
               {projects.map((project, index) => (
                 <div
-                  className={`block project-card c${(index % 5) + 1}`}
+                  className="block project-card"
                   key={project.title}
                 >
-                  <p className="project-index">project / {String(index + 1).padStart(2, "0")}</p>
-                  <h3>
-                    {project.title}
+                  <div className="project-card-topline">
+                    <p className="project-index">
+                      {String(index + 1).padStart(2, "0")} / project
+                    </p>
                     {project.flag && (
                       <span className="new-flag">{project.flag}</span>
                     )}
-                  </h3>
-                  <ProjectVisual type={project.visual} />
-                  <p>{project.description}</p>
+                  </div>
+                  <h3>{project.title}</h3>
+                  <p className="project-description">{project.description}</p>
                   <p className="cta-row">
                     <a
                       className="cta-button"
@@ -969,8 +863,6 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
                   </p>
                 </div>
               ))}
-
-              <WebsiteHealthDashboard health={health} />
             </div>
           </div>
         </div>
@@ -1342,123 +1234,6 @@ function WebsiteHealthDashboard({ health }) {
         ))}
       </div>
     </aside>
-  );
-}
-
-function ProjectVisual({ type }) {
-  if (type === "chat") {
-    return (
-      <div className="visual chat" aria-hidden="true">
-        <div className="chat-bar">
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className="bubble user">explain APIs like I'm 12</div>
-        <div className="bubble ai">
-          ok — imagine a restaurant where the waiter is the API…
-        </div>
-        <div className="chat-input">
-          <span className="caret" />
-          type a prompt
-        </div>
-      </div>
-    );
-  }
-
-  if (type === "roles") {
-    return (
-      <div className="visual roles" aria-hidden="true">
-        <div className="role-row">
-          <span className="role-dot" />
-          <span className="role-title">Forward Deployed Eng</span>
-          <span className="role-apply">↗</span>
-        </div>
-        <div className="role-row">
-          <span className="role-dot" />
-          <span className="role-title">FDE · AI Platform</span>
-          <span className="role-apply">↗</span>
-        </div>
-        <div className="role-row faded">
-          <span className="role-dot" />
-          <span className="role-title">Solutions Engineer</span>
-          <span className="role-apply">↗</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (type === "stems") {
-    const wave = [38, 62, 88, 54, 72, 95, 60, 80, 46, 68, 90, 52];
-    return (
-      <div className="visual stems" aria-hidden="true">
-        <div className="stem-row full">
-          <span className="stem-label">track</span>
-          <div className="stem-wave">
-            {wave.map((h, i) => (
-              <span key={i} style={{ height: `${h}%` }} />
-            ))}
-          </div>
-        </div>
-        <div className="stem-arrow">↓ demucs</div>
-        {[
-          { name: "drums", cls: "drums", bars: [80, 30, 85, 25, 90, 35] },
-          { name: "bass", cls: "bass", bars: [55, 70, 60, 75, 50, 65] },
-          { name: "vocals", cls: "vocals", bars: [20, 60, 90, 70, 40, 25] },
-        ].map((s) => (
-          <div className={`stem-row ${s.cls}`} key={s.name}>
-            <span className="stem-label">{s.name}</span>
-            <div className="stem-wave">
-              {s.bars.map((h, i) => (
-                <span key={i} style={{ height: `${h}%` }} />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (type === "ranks") {
-    return (
-      <div className="visual ranks" aria-hidden="true">
-        {[
-          { name: "unheard_07.mp3", score: 0.93 },
-          { name: "unheard_19.mp3", score: 0.88 },
-          { name: "unheard_02.mp3", score: 0.61 },
-        ].map((t) => (
-          <div className="rank-row" key={t.name}>
-            <span className="rank-name">{t.name}</span>
-            <span className="rank-bar">
-              <i style={{ width: `${t.score * 100}%` }} />
-            </span>
-            <span className="rank-score">{t.score.toFixed(2)}</span>
-          </div>
-        ))}
-        <div className="rank-caption">ranked by taste-profile similarity</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="visual phone" aria-hidden="true">
-      <div className="call-pill">
-        <span className="call-dot" />
-        incoming call
-      </div>
-      <div className="waveform">
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
-      <div className="call-steps">✓ name ✓ insurance ✓ address · scheduling…</div>
-    </div>
   );
 }
 
