@@ -1,0 +1,101 @@
+body.ball-landing-active {
+  background: #000;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.ball-landing {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  isolation: isolate;
+}
+
+.ball-landing canvas {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ball-landing .ball-hit-area {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+}
+
+.ball-landing .ball-hit-area:active {
+  cursor: grabbing;
+}
+
+.ball-landing .ball-hit-area:focus-visible {
+  outline: 1px dashed currentColor;
+  outline-offset: 8px;
+}
+
+.ball-landing .click-me {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 2;
+  appearance: auto;
+  -webkit-appearance: button;
+  border: 3px outset #fff;
+  border-radius: 0;
+  padding: 7px 13px;
+  background: #d4d0c8;
+  color: #000;
+  box-shadow: 3px 3px 0 #555;
+  font: bold 14px/1.2 "Times New Roman", serif;
+  text-decoration: none;
+  text-transform: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.ball-landing .click-me:active {
+  border-style: inset;
+  box-shadow: 1px 1px 0 #555;
+}
+
+.ball-landing .click-me:focus-visible {
+  outline: 2px solid #ff0;
+  outline-offset: 4px;
+}
+
+.ball-instructions {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.site-loading {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  padding: 24px;
+  font: 14px Arial, sans-serif;
+}
