@@ -68,12 +68,15 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 36px 0; }
 .sidebar-nav a:hover { color: var(--ink); }
 .sidebar-note { margin-top: auto; padding-top: 40px; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .retro-main { width: 100%; min-width: 0; max-width: 1256px; margin: 0 auto; padding: 42px 52px 32px; }
+.page-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 36px; }
+.back-to-ball { flex-shrink: 0; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--muted); padding: 7px 11px; font-size: 11px; }
+.back-to-ball:hover { color: var(--ink); background: var(--soft); }
 .music-ad-bar {
   display: flex;
   align-items: center;
   gap: 12px;
   width: fit-content;
-  margin-bottom: 36px;
+  margin-bottom: 0;
   font-size: 12px;
   text-decoration: none;
 }
@@ -262,7 +265,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 36px 0; }
 }
 @media (max-width: 650px) {
   .retro-main { padding: 24px 22px 30px; }
-  .music-ad-bar { margin-bottom: 30px; font-size: 11px; }
+  .page-topbar { margin-bottom: 30px; }
+  .music-ad-bar { font-size: 11px; }
   .site-header { align-items: stretch; flex-direction: column; gap: 26px; }
   .site-identity { gap: 18px; }
   .name-photo { width: 58px; height: 68px; }

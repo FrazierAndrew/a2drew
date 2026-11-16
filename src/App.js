@@ -578,6 +578,7 @@ function App() {
       </aside>
 
       <main className="retro-main" id="top">
+        <div className="page-topbar">
         <a
           className="music-ad-bar"
           href="https://open.spotify.com/artist/6Jsvb6OyiHyz2kCTWmnz9O?si=rLtCJy3VQ6WRZgzg3sL9rw"
@@ -591,6 +592,10 @@ function App() {
             <path d="M4 12 12 4M4 4h8v8" stroke="currentColor" strokeWidth="1.3" />
           </svg>
         </a>
+        <button className="back-to-ball" type="button" onClick={() => { window.location.hash = ""; }}>
+          back to ball
+        </button>
+        </div>
         <header className="site-header">
           <div className="site-identity">
             <img className="name-photo" src="/headshot.jpg" alt="Andrew Frazier" />
