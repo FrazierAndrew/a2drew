@@ -1,0 +1,190 @@
+.now-playing {
+  box-sizing: border-box;
+  width: 320px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #30332f;
+  border-radius: 12px;
+  background: #20231f;
+  color: #f4f4ef;
+  font: 400 13px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-align: left;
+}
+
+.now-playing .now-playing-main {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 12px;
+}
+
+.now-playing .now-playing-art,
+.now-playing .now-playing-art:visited {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.now-playing .now-playing-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.now-playing .now-playing-track {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.now-playing .now-playing-label {
+  margin-bottom: 2px;
+  color: #a4ada0;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.now-playing .now-playing-title,
+.now-playing .now-playing-title:visited {
+  color: #f4f4ef;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.35;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.now-playing .now-playing-title:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.now-playing .now-playing-artist {
+  color: #aeb4aa;
+  font-size: 12px;
+}
+
+.now-playing .now-playing-toggle {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #4b5146;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  color: #eef0e9;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.now-playing .now-playing-toggle:hover {
+  border-color: #a8b39d;
+  background: #30362b;
+}
+
+.now-playing .now-playing-toggle:active { background: #414a38; }
+.now-playing .now-playing-toggle svg { display: block; }
+
+.now-playing .now-playing-timeline {
+  display: grid;
+  grid-template-columns: 29px minmax(0, 1fr) 29px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.now-playing .now-playing-time {
+  color: #929b8c;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.now-playing .now-playing-time:last-child { text-align: right; }
+
+.now-playing .now-playing-seek {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline-offset: 2px;
+  background: transparent;
+  cursor: pointer;
+  accent-color: #c1cbb6;
+  touch-action: pan-y;
+}
+
+.now-playing .now-playing-seek::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #c1cbb6 var(--played), #474d41 var(--played));
+}
+
+.now-playing .now-playing-seek::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+  margin-top: -3px;
+  border: 0;
+  border-radius: 50%;
+  background: #d7dfcf;
+}
+
+.now-playing .now-playing-seek::-moz-range-track { height: 2px; background: #474d41; }
+.now-playing .now-playing-seek::-moz-range-progress { height: 2px; background: #c1cbb6; }
+.now-playing .now-playing-seek::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: #d7dfcf;
+}
+
+.now-playing .now-playing-seek:disabled { cursor: default; opacity: 0.5; }
+.now-playing .now-playing-seek:disabled::-webkit-slider-thumb { background: transparent; }
+.now-playing .now-playing-seek:disabled::-moz-range-thumb { background: transparent; }
+
+.now-playing a:focus-visible,
+.now-playing button:focus-visible,
+.now-playing input:focus-visible {
+  outline: 2px solid #dce5d2;
+  outline-offset: 4px;
+}
+
+.now-playing .now-playing-error {
+  margin: 7px 0 0;
+  color: #c5cabb;
+  font-size: 11px;
+}
+
+.now-playing .now-playing-error a,
+.now-playing .now-playing-error a:visited { color: #eef0e9; }
+.now-playing audio { display: none; }
+
+html[data-theme="dark"] .now-playing {
+  border-color: #3d4437;
+  background: #23271f;
+}
+
+@media (max-width: 420px) {
+  .now-playing { padding: 14px; }
+}

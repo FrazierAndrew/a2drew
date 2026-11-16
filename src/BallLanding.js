@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import "./BallLanding.css";
 
-const BIO = "andrew frazier builds software, makes music, and lives in san francisco. backend systems, small experiments & more";
+const BIO = "andrew frazier. software engineer in san francisco. i build backend systems and make music in ableton.";
 const PALETTE = [
   ["#000000", "#ffffff"],
   ["#163cff", "#ffffff"],

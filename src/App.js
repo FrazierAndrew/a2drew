@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import NowPlaying from "./NowPlaying";
 import "./App.css";
 
 const links = [
-  { label: "Resume", href: "/Andrew_Resume.pdf", variant: "primary" },
+  { label: "Résumé", href: "/Andrew_Resume.pdf", variant: "primary" },
   { label: "GitHub", href: "https://github.com/FrazierAndrew" },
   {
     label: "LinkedIn",
@@ -15,29 +16,29 @@ const projects = [
   {
     title: "careplan-generator",
     description:
-      "A FastAPI app for pharmacies that generates patient care plans. The backend separates validation, orchestration, SQLite persistence, PDF extraction, and LLM work, with duplicate-submission checks, CSV export, and unit plus API integration tests.",
+      "Generates patient care plans from pharmacy records. Built with FastAPI and SQLite, with PDF import, duplicate checks, and CSV export.",
     cta: "View code",
     href: "https://github.com/FrazierAndrew/careplan-generator",
-    flag: "Best backend sample",
+    flag: "FastAPI · SQLite",
   },
   {
     title: "phone-agent",
     description:
-      "A Twilio phone intake service for medical appointment scheduling. It collects patient, insurance, referral, complaint, address, and contact details; retries missing fields, validates addresses, schedules the appointment, and emails a confirmation.",
+      "A Twilio phone service for booking medical appointments. Collects patient details, checks addresses, and emails a confirmation.",
     cta: "View code",
     href: "https://github.com/FrazierAndrew/phone-agent",
   },
   {
     title: "mp3-to-claude",
     description:
-      "A CLI that converts audio libraries into structured JSON and CSV for downstream analysis. It extracts tempo, key and Camelot code, loudness, dynamics, timbre, chroma, spectral shape, and rough structure, with parallel processing and optional ratings.",
+      "Analyzes an audio library and exports tempo, key, loudness, and other track data as JSON or CSV.",
     cta: "View code",
     href: "https://github.com/FrazierAndrew/mp3-to-claude",
   },
   {
     title: "stem-lab",
     description:
-      "A Demucs and librosa pipeline that splits a finished track into six stems, measures BPM, key, sections, onsets, and spectral shape, then writes a machine-readable plan and step-by-step Ableton reconstruction guide.",
+      "Splits a track into six stems and maps its tempo, key, and sections. Includes a guide to rebuilding the arrangement in Ableton.",
     cta: "View code",
     href: "https://github.com/FrazierAndrew/stem-lab",
     planHref: "/example-plan.html",
@@ -45,7 +46,7 @@ const projects = [
   {
     title: "ll-mem",
     description:
-      "A FastAPI and SQLite experiment in long-term chatbot memory. It captures signals from each conversation, clusters repeated patterns, updates a running portrait, and flags changes against the behavior established over time.",
+      "An experiment in chatbot memory. Stores conversation details in SQLite and tracks recurring patterns over time.",
     cta: "View code",
     href: "https://github.com/FrazierAndrew/ll-mem",
   },
@@ -68,11 +69,11 @@ const hotkeyGroups = [
       { combo: ["⌘", "T"], desc: "open a new tab" },
       { combo: ["Ctrl", "Tab"], desc: "next tab" },
       { combo: ["Ctrl", "⇧", "Tab"], desc: "previous tab" },
-      { combo: ["⌘", "⇧", "T"], desc: "reopen last closed tab (lifesaver)" },
+      { combo: ["⌘", "⇧", "T"], desc: "reopen the last closed tab" },
     ],
   },
   {
-    title: "Chrome — getting around)",
+    title: "Chrome — navigation",
     keys: [
       { combo: ["⌘", "L"], desc: "jump to the address bar" },
       { combo: ["⌘", "["], desc: "back" },
@@ -81,109 +82,13 @@ const hotkeyGroups = [
   },
 ];
 
-const nowPlaying = {
-  title: "The Color of Nothing",
-  artist: "ford.",
-  art: "/now-playing.jpg",
-  audio: "/now-playing.mp3",
-  href: "https://open.spotify.com/track/7AxFLOKzAkxhkWKXZC7WVM",
-};
-
-function NowPlaying() {
-  const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  const toggle = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (audio.paused) {
-      audio
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
-    } else {
-      audio.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  return (
-    <div className={`winamp${isPlaying ? " playing" : ""}`}>
-      <div className="winamp-titlebar">
-        <span>NOW PLAYING</span>
-        <span className="winamp-buttons">_ □ ✕</span>
-      </div>
-      <div className="winamp-body">
-        <a
-          className="winamp-art"
-          href={nowPlaying.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="open in Spotify"
-        >
-          <img src={nowPlaying.art} alt={`${nowPlaying.title} cover`} />
-        </a>
-        <div className="winamp-info">
-          <div className="winamp-lcd">
-            <span className="winamp-scroll">
-              ► {nowPlaying.artist} — {nowPlaying.title} &nbsp;&nbsp;&nbsp; ►{" "}
-              {nowPlaying.artist} — {nowPlaying.title}
-            </span>
-          </div>
-          <div className="winamp-progress">
-            <i style={{ width: `${progress}%` }} />
-          </div>
-          <div className="winamp-controls">
-            <button
-              className="winamp-play"
-              onClick={toggle}
-              type="button"
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? "❚❚" : "►"}
-            </button>
-            <span className="winamp-eq" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
-            </span>
-            <span className="winamp-kbps"></span>
-          </div>
-        </div>
-      </div>
-      <audio
-        ref={audioRef}
-        src={nowPlaying.audio}
-        preload="metadata"
-        onTimeUpdate={(e) => {
-          const a = e.currentTarget;
-          if (a.duration) setProgress((a.currentTime / a.duration) * 100);
-        }}
-        onEnded={() => {
-          setIsPlaying(false);
-          setProgress(0);
-        }}
-      />
-      <div className="np-callout" aria-hidden="true">
-        <span className="np-note">
-         My most played song on Spotify ---> 
-        </span>
-        <span className="np-arrow">→</span>
-      </div>
-    </div>
-  );
-}
-
 const powerTools = [
-  { name: "Rectangle Pro", desc: "keyboard-driven window snapping & saved layouts" },
-  { name: "Karabiner-Elements", desc: "remap keys and build custom modifier layers" },
-  { name: "Alfred 5", desc: "Spotlight on steroids — launch, search, run workflows" },
-  { name: "AltTab", desc: "real Windows-style Alt-Tab to switch windows, not just apps" },
-  { name: "Maccy", desc: "clipboard history — paste anything you copied earlier" },
-  { name: "MTMR", desc: "My TouchBar My Rules: if youve still got a touch bar - fully customize it" },
+  { name: "Rectangle Pro", desc: "window snapping and saved layouts" },
+  { name: "Karabiner-Elements", desc: "key remapping and custom modifier keys" },
+  { name: "Alfred 5", desc: "app launcher, search, and workflows" },
+  { name: "AltTab", desc: "switch between individual windows" },
+  { name: "Maccy", desc: "clipboard history" },
+  { name: "MTMR", desc: "custom controls for the MacBook Touch Bar" },
 ];
 
 const bucketList = [
@@ -239,11 +144,11 @@ function BucketListView({ onRevert }) {
   return (
     <div className="bucket-view">
       <button className="revert-btn" onClick={onRevert} type="button">
-        &laquo; revert
+        &larr; Back
       </button>
-      <h1 className="bucket-title">Andrew's Bucket List</h1>
+      <h1 className="bucket-title">Bucket list</h1>
       <p className="bucket-key">
-        {doneCount} / {bucketList.length} complete · crossed out means done
+        {doneCount} / {bucketList.length} done
       </p>
       <ol className="bucket-ol">
         {bucketList.map((item) => {
@@ -257,7 +162,7 @@ function BucketListView({ onRevert }) {
               <span className="bucket-text">{item.text}</span>
               {isLocked && (
                 <span className="bucket-condition">
-                  (only when all others are complete)
+                  (after everything else)
                 </span>
               )}
             </li>
@@ -265,7 +170,7 @@ function BucketListView({ onRevert }) {
         })}
       </ol>
       <button className="revert-btn revert-btn-bottom" onClick={onRevert} type="button">
-        &laquo; back to the website
+        &larr; Back to site
       </button>
     </div>
   );
@@ -277,7 +182,7 @@ function detectBrowser(ua) {
   if (/Chrome\//.test(ua)) return "Chrome";
   if (/Firefox\//.test(ua)) return "Firefox";
   if (/Safari\//.test(ua)) return "Safari";
-  return "some browser";
+  return "unknown";
 }
 
 function PrivacyView({ health, onClose }) {
@@ -434,10 +339,10 @@ function PrivacyView({ health, onClose }) {
       <header className="privacy-bar">
         <div className="privacy-bar-title">
           <span className="privacy-kicker">browser privacy</span>
-          <strong>What a webpage can see</strong>
+          <strong>Browser information</strong>
         </div>
         <button className="privacy-close" onClick={onClose} type="button">
-          back to site ✕
+          Back to site
         </button>
       </header>
 
@@ -451,7 +356,7 @@ function PrivacyView({ health, onClose }) {
           onClick={() => setActiveTab("overview")}
           type="button"
         >
-          browser info
+          Browser details
         </button>
         <button
           aria-pressed={activeTab === "tracking"}
@@ -459,7 +364,7 @@ function PrivacyView({ health, onClose }) {
           onClick={() => setActiveTab("tracking")}
           type="button"
         >
-          tracking demo
+          Session activity
         </button>
       </nav>
 
@@ -467,19 +372,17 @@ function PrivacyView({ health, onClose }) {
         {activeTab === "overview" ? (
           <>
             <section className="privacy-intro">
-              <p className="privacy-kicker">informational demo</p>
-              <h1>What your browser shares with websites</h1>
+              <p className="privacy-kicker">On this device</p>
+              <h1>What your browser reports</h1>
               <p>
-                This page shows ordinary browser and device details available
-                to a webpage, along with the current state of common
-                permissions. Nothing shown here is stored or sent anywhere.
+                These details come from your browser. This page does not save
+                or send them anywhere.
               </p>
             </section>
 
             <aside className="privacy-note">
-              <strong>Permission status is not access.</strong> This page
-              checks the status reported by your browser. It does not request
-              your camera, microphone, location, notifications, or clipboard.
+              This checks existing permissions. It does not ask for your
+              location, camera, microphone, notifications, or clipboard.
             </aside>
 
             <section className="privacy-section">
@@ -500,9 +403,8 @@ function PrivacyView({ health, onClose }) {
                 ))}
               </div>
               <p className="privacy-permission-note">
-                “Prompt” means your browser would ask before granting access.
-                “Unsupported” means this browser does not report that status
-                here.
+                “Prompt” means your browser would ask first. “Unsupported” means
+                it cannot report that permission here.
               </p>
             </section>
 
@@ -517,14 +419,14 @@ function PrivacyView({ health, onClose }) {
                 ))}
               </div>
               <p className="privacy-explanation">
-                Sites use details like these for compatibility and responsive
-                layouts. When many signals are combined, they can also
-                contribute to browser fingerprinting.
+                Websites use this information to fit your screen and support
+                your browser. Combined, these details can also help identify
+                a browser across visits.
               </p>
             </section>
 
             <section className="privacy-section privacy-tips">
-              <h2>Simple privacy controls</h2>
+              <h2>Privacy settings</h2>
               <ul>
                 <li>Review permissions before granting access to a site.</li>
                 <li>
@@ -537,12 +439,11 @@ function PrivacyView({ health, onClose }) {
         ) : (
           <>
             <section className="privacy-intro">
-              <p className="privacy-kicker">optional interactive demo</p>
-              <h1>Visitor vibe check</h1>
+              <p className="privacy-kicker">This visit</p>
+              <h1>Session activity</h1>
               <p>
-                The original homepage widget lives here now. It counts clicks,
-                pointer movement, scrolling, and time only while this tab is
-                open. Nothing is stored or sent.
+                A counter for clicks, pointer movement, scrolling, and time on
+                this page. It resets when you leave. Nothing is saved or sent.
               </p>
             </section>
             <section className="privacy-tracking-panel">
@@ -552,7 +453,7 @@ function PrivacyView({ health, onClose }) {
         )}
 
         <button className="privacy-leave" onClick={onClose} type="button">
-          back to the website
+          Back to site
         </button>
       </main>
     </div>
@@ -644,7 +545,6 @@ function App() {
     setUsername(nextUsername);
     setIsLoginOpen(false);
     window.localStorage.setItem("site-username", nextUsername);
-    console.info("a2drew.com login username:", nextUsername);
   };
 
   if (bucketOpen) {
@@ -674,20 +574,7 @@ function App() {
           <a href="/Andrew_Resume.pdf">Résumé</a>
           <a href="#bottom">Contact</a>
         </nav>
-        <p className="sidebar-note">a small corner of the internet</p>
-        <details className="sidebar-easter-egg">
-          <summary>system status</summary>
-          <pre className="stack-trace">{`Exception in thread "main"
-java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
-	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
-	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
-	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
-	at java.base/java.util.Objects.checkIndex(Objects.java:385)
-	at java.base/java.util.ArrayList.get(ArrayList.java:427)
-	at com.a2drew.site.Sidebar.render(Sidebar.java:42)
-	at com.a2drew.site.HomePage.draw(HomePage.java:88)
-	at com.a2drew.site.HomePage.main(HomePage.java:17)`}</pre>
-        </details>
+        <p className="sidebar-note">San Francisco, CA</p>
       </aside>
 
       <main className="retro-main" id="top">
@@ -698,17 +585,19 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span>advertisement</span>
-          <strong>Check out my Music on Spotify</strong>
-          <span aria-hidden="true">↗</span>
+          <span>Music</span>
+          <strong>Listen on Spotify</strong>
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="none" aria-hidden="true">
+            <path d="M4 12 12 4M4 4h8v8" stroke="currentColor" strokeWidth="1.3" />
+          </svg>
         </a>
         <header className="site-header">
           <div className="site-identity">
             <img className="name-photo" src="/headshot.jpg" alt="Andrew Frazier" />
             <div>
-              <p className="site-kicker">a2drew.com / personal home page</p>
+              <p className="site-kicker">Software &amp; music</p>
               <h1>Andrew Frazier</h1>
-              <p className="site-location">San Francisco · software, music, small experiments</p>
+              <p className="site-location">San Francisco, California</p>
             </div>
           </div>
           <div className="site-utilities">
@@ -719,14 +608,14 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
                 onClick={() => setPrivacyOpen(true)}
                 type="button"
               >
-                privacy info
+                Browser info
               </button>
               <button
                 className="utility-button bucket-btn"
                 onClick={() => setBucketOpen(true)}
                 type="button"
               >
-                bucket list
+                Bucket list
               </button>
             </div>
           </div>
@@ -741,22 +630,22 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
             {isLoginOpen ? (
               <form className="login-form" onSubmit={logUsername}>
                 <label className="sr-only" htmlFor="username-input">
-                  Username
+                  Your name
                 </label>
                 <input
                   autoComplete="username"
                   autoFocus
                   id="username-input"
                   onChange={(event) => setUsernameInput(event.target.value)}
-                  placeholder="username"
+                  placeholder="Your name"
                   type="text"
                   value={usernameInput}
                 />
-                <button type="submit">Log</button>
+                <button type="submit">Save</button>
               </form>
             ) : (
               <button className="login-trigger" onClick={openLogin} type="button">
-                {username ? username : "Login"}
+                {username ? username : "Your name"}
               </button>
             )}
           </span>
@@ -771,57 +660,55 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
               <span className="theme-switch-thumb" />
             </span>
             <span className="theme-switch-text">
-              {isDark ? "lights on" : "lights off"}
+              {isDark ? "Light mode" : "Dark mode"}
             </span>
           </button>
         </nav>
         <div className="header-rule">
           <hr />
-          <span className="turtle-walker" aria-hidden="true">
-            <span className="turtle">🐢</span>
-          </span>
         </div>
 
         <div className="body-columns" id="work">
           <div className="left-col">
             <div className="block c0 hello-block">
-              <p className="section-label">01 / hello, internet</p>
+              <p className="section-label">About</p>
               <p className="intro-lede">
-                I live in San Francisco, build software, and make music in Ableton.
+                I’m a software engineer in San Francisco. I build backend systems and make music in Ableton.
               </p>
               <p>
-                This is the part portfolio, part notebook version of me: real projects, useful Mac shortcuts, and a few experiments that are more fun than a normal résumé site would allow.
-              </p>
-              <p>
-                Here for work? Start with the <a href="/Andrew_Resume.pdf">résumé</a>.
+                For my work history, see my <a href="/Andrew_Resume.pdf">résumé</a>.
               </p>
             </div>
 
             <div className="block c3 resume-block">
               <h3>
-                Resume
+                Résumé
                 <a className="resume-open" href="/Andrew_Resume.pdf" target="_blank" rel="noopener noreferrer">
-                  open full page
+                  Open PDF
                 </a>
               </h3>
-              <object
-                aria-label="Andrew Frazier resume"
-                data="/Andrew_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
-                type="application/pdf"
-              >
-                <p>
-                  Your browser can't show the PDF inline.{" "}
-                  <a href="/Andrew_Resume.pdf">Download the resume</a> instead.
-                </p>
-              </object>
+              <p>Backend systems, reliability, and AI applications.</p>
+              <details className="resume-preview">
+                <summary>Preview résumé</summary>
+                <object
+                  aria-label="Andrew Frazier resume"
+                  data="/Andrew_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
+                  type="application/pdf"
+                >
+                  <p>
+                    Your browser can't show the PDF inline.{" "}
+                    <a href="/Andrew_Resume.pdf">Download the résumé</a> instead.
+                  </p>
+                </object>
+              </details>
             </div>
 
           </div>
 
           <div className="right-col">
             <div className="project-heading">
-              <p className="section-label">02 / selected work</p>
-              <h2 className="col-title">Selected GitHub work</h2>
+              <p className="section-label">Code</p>
+              <h2 className="col-title">Projects</h2>
             </div>
             <div className="project-masonry">
               {projects.map((project, index) => (
@@ -831,7 +718,7 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
                 >
                   <div className="project-card-topline">
                     <p className="project-index">
-                      {String(index + 1).padStart(2, "0")} / project
+                      {String(index + 1).padStart(2, "0")}
                     </p>
                     {project.flag && (
                       <span className="new-flag">{project.flag}</span>
@@ -855,9 +742,7 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <span className="plan-star" aria-hidden="true">★</span>
-                        example plan
-                        <span className="plan-star" aria-hidden="true">★</span>
+                        Example plan
                       </a>
                     )}
                   </p>
@@ -868,15 +753,8 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
         </div>
 
         <div className="block c2 hotkeys-block">
-          <h3>
-            
-            <h3>Life Changing Shortcuts</h3>
-            <p className="hotkeys-intro">
-            :0
-          </p>
-          </h3>
-          <p className="hotkeys-intro">
-          </p>
+          <p className="section-label">On my Mac</p>
+          <h3>Keyboard shortcuts</h3>
           <div className="hotkeys-cols">
             {hotkeyGroups.map((group) => (
               <div className="hotkey-group" key={group.title}>
@@ -902,10 +780,8 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
         </div>
 
         <div className="block c5 tools-block">
-          <h3>Life changing Apps</h3>
-          <p className="hotkeys-intro">
-            :0
-          </p>
+          <p className="section-label">Daily use</p>
+          <h3>Mac apps</h3>
           <ul className="tools-list">
             {powerTools.map((tool) => (
               <li key={tool.name}>
@@ -917,14 +793,13 @@ java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 4
 
         <hr />
         <p className="footer" id="contact">
-          <span id="bottom">Andrew Frazier · San Francisco · </span>
+          <span id="bottom">Andrew Frazier · San Francisco</span>
           {links.map((link) => (
             <a href={link.href} key={link.label}>
-              [{link.label}]
+              {link.label}
             </a>
           ))}
-          <br />
-          <i>Yes, it is supposed to look like this.</i>
+          <a className="previous-version" href="/?version=classic#site">Previous version</a>
         </p>
       </main>
     </div>
@@ -942,9 +817,9 @@ function WebsiteHealthDashboard({ health }) {
     resumeHovers: 0,
     confetti: 0,
     events: [
-      "visitor arrived",
-      "page is trying to look professional",
-      "resume button is waiting patiently",
+      "Session started",
+      "Page loaded",
+      "Counters reset",
     ],
   });
 
@@ -956,7 +831,7 @@ function WebsiteHealthDashboard({ health }) {
       setStats((current) => ({
         ...current,
         clicks: current.clicks + 1,
-        events: ["clicked around", ...current.events].slice(0, 3),
+        events: ["Click recorded", ...current.events].slice(0, 3),
       }));
     };
 
@@ -974,7 +849,7 @@ function WebsiteHealthDashboard({ health }) {
       setStats((current) => ({
         ...current,
         scrolls: current.scrolls + 1,
-        events: ["went exploring", ...current.events].slice(0, 3),
+        events: ["Page scrolled", ...current.events].slice(0, 3),
       }));
     };
 
@@ -982,7 +857,7 @@ function WebsiteHealthDashboard({ health }) {
       setStats((current) => ({
         ...current,
         resumeHovers: current.resumeHovers + 1,
-        events: ["peeked at resume button", ...current.events].slice(0, 3),
+        events: ["Résumé link hovered", ...current.events].slice(0, 3),
       }));
     };
 
@@ -1022,30 +897,8 @@ function WebsiteHealthDashboard({ health }) {
     };
   }, [megaSurprise]);
 
-  const curiosity = Math.min(
-    99,
-    11 + stats.clicks * 3 + stats.scrolls * 4 + stats.resumeHovers * 10 + stats.confetti * 8,
-  );
   const buttonPokes = stats.clicks + stats.confetti;
-  const wiggleLevel = Math.min(99, 18 + stats.wiggles * 3);
-  const resumeTemptation = Math.min(99, 20 + stats.resumeHovers * 25);
-  const moodLabel =
-    curiosity > 82
-      ? "interactive"
-      : stats.resumeHovers > 0
-        ? "resume-curious"
-        : stats.clicks > 2
-          ? "clicky"
-          : mood;
-  const moodEmoji =
-    {
-      interactive: "🤩",
-      "resume-curious": "👀",
-      clicky: "⚡",
-      delighted: "😄",
-      impressed: "😎",
-      curious: "🤔",
-    }[moodLabel] || "🤔";
+  const moodLabel = mood === "delighted" ? "playing" : "active";
   const confettiColors = ["#1f5c6d", "#c2562f", "#e3b341", "#7fb069"];
   const sparkleBars = Array.from({ length: 10 }, (_, index) => {
     const base = 24 + ((stats.seconds + index * 13 + stats.clicks * 7) % 58);
@@ -1058,7 +911,7 @@ function WebsiteHealthDashboard({ health }) {
     setStats((current) => ({
       ...current,
       confetti: current.confetti + 1,
-      events: ["detonated mega-suprise", ...current.events].slice(0, 3),
+      events: ["Visual effect played", ...current.events].slice(0, 3),
     }));
   };
 
@@ -1067,14 +920,14 @@ function WebsiteHealthDashboard({ health }) {
     setStats((current) => ({
       ...current,
       clicks: current.clicks + 1,
-      events: ["pressed the important-looking button", ...current.events].slice(0, 3),
+      events: ["Test event added", ...current.events].slice(0, 3),
     }));
   };
 
   return (
     <aside
       className={`hero-panel health-dashboard mood-${moodLabel}`}
-      aria-label="Interactive website mood dashboard"
+      aria-label="Session activity counters"
     >
       {megaSurprise && (
         <div className="mega-surprise" aria-hidden="true">
@@ -1165,31 +1018,31 @@ function WebsiteHealthDashboard({ health }) {
         </div>
       )}
       <div className="panel-header">
-        <span>visitor vibe check</span>
+        <span>Session activity</span>
         <span>{health.status === "healthy" ? moodLabel : "offline"}</span>
       </div>
 
       <div className="health-summary live-summary">
         <div>
-          <p>Curiosity meter</p>
-          <strong>{curiosity}%</strong>
-          <span className="live-subtext">goes up when you poke around</span>
+          <p>Time on this page</p>
+          <strong>{stats.seconds}s</strong>
+          <span className="live-subtext">This visit only</span>
         </div>
         <div
           className="signal-orb"
-          style={{ "--pulse": `${curiosity}%` }}
+          style={{ "--pulse": "50%" }}
           aria-hidden="true"
         >
-          <span className="orb-face">{moodEmoji}</span>
+          <span className="orb-face">•</span>
         </div>
       </div>
 
-      <div className="health-controls" aria-label="Playful dashboard controls">
+      <div className="health-controls" aria-label="Activity demo controls">
         <button onClick={makeItHappy} type="button">
-          mega-suprise
+          Play effect
         </button>
         <button onClick={actInterested} type="button">
-          Act interested
+          Add an event
         </button>
       </div>
 
@@ -1207,25 +1060,25 @@ function WebsiteHealthDashboard({ health }) {
 
       <div className="health-grid">
         <div className="health-check ok">
-          <span>Buttons poked</span>
+          <span>Clicks</span>
           <strong>{buttonPokes}</strong>
         </div>
         <div className="health-check ok">
-          <span>Mouse wiggles</span>
-          <strong>{wiggleLevel}%</strong>
+          <span>Pointer moves</span>
+          <strong>{stats.wiggles}</strong>
         </div>
         <div className="health-check ok">
-          <span>Resume temptation</span>
-          <strong>{resumeTemptation}%</strong>
+          <span>Résumé hovers</span>
+          <strong>{stats.resumeHovers}</strong>
         </div>
         <div className="health-check ok">
-          <span>Time here</span>
-          <strong>{stats.seconds}s</strong>
+          <span>Scrolls</span>
+          <strong>{stats.scrolls}</strong>
         </div>
       </div>
 
       <div className="activity-feed">
-        <span>what the site noticed</span>
+        <span>Recent events</span>
         {stats.events.map((event, index) => (
           <p key={`${event}-${index}`}>
             <i />
